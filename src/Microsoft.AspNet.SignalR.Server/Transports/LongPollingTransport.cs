@@ -283,10 +283,10 @@ namespace Microsoft.AspNet.SignalR.Transports
             }
         }
 
-        private class LongPollingTransportContext
+        private struct LongPollingTransportContext
         {
-            public object State;
-            public LongPollingTransport Transport;
+            public readonly object State;
+            public readonly LongPollingTransport Transport;
 
             public LongPollingTransportContext(LongPollingTransport transport, object state)
             {

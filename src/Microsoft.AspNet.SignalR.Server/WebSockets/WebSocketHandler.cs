@@ -264,9 +264,9 @@ namespace Microsoft.AspNet.SignalR.WebSockets
                    webSocket.State == WebSocketState.Aborted;
         }
 
-        private class CloseContext
+        private struct CloseContext
         {
-            public WebSocketHandler Handler;
+            public readonly WebSocketHandler Handler;
 
             public CloseContext(WebSocketHandler webSocketHandler)
             {
@@ -274,12 +274,12 @@ namespace Microsoft.AspNet.SignalR.WebSockets
             }
         }
 
-        private class SendContext
+        private struct SendContext
         {
-            public WebSocketHandler Handler;
-            public ArraySegment<byte> Message;
-            public WebSocketMessageType MessageType;
-            public bool EndOfMessage;
+            public readonly WebSocketHandler Handler;
+            public readonly ArraySegment<byte> Message;
+            public readonly WebSocketMessageType MessageType;
+            public readonly bool EndOfMessage;
 
             public SendContext(WebSocketHandler webSocketHandler, ArraySegment<byte> message, WebSocketMessageType messageType, bool endOfMessage)
             {
@@ -290,12 +290,12 @@ namespace Microsoft.AspNet.SignalR.WebSockets
             }
         }
 
-        private class ReceiveContext
+        private struct ReceiveContext
         {
-            public WebSocket WebSocket;
-            public CancellationToken DisconnectToken;
-            public int? MaxIncomingMessageSize;
-            public int BufferSize;
+            public readonly WebSocket WebSocket;
+            public readonly CancellationToken DisconnectToken;
+            public readonly int? MaxIncomingMessageSize;
+            public readonly int BufferSize;
 
             public ReceiveContext(WebSocket webSocket, CancellationToken disconnectToken, int? maxIncomingMessageSize, int bufferSize)
             {

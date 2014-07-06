@@ -303,10 +303,10 @@ namespace Microsoft.AspNet.SignalR.Transports
             return TaskAsyncHelper.Empty;
         }
 
-        private class ForeverTransportContext
+        private struct ForeverTransportContext
         {
-            public object State;
-            public ForeverTransport Transport;
+            public readonly object State;
+            public readonly ForeverTransport Transport;
 
             public ForeverTransportContext(ForeverTransport foreverTransport, object state)
             {
@@ -315,7 +315,7 @@ namespace Microsoft.AspNet.SignalR.Transports
             }
         }
 
-        private class SubscriptionDisposerContext
+        private struct SubscriptionDisposerContext
         {
             private readonly Disposer _disposer;
             private readonly IDisposable _supscription;
@@ -332,7 +332,7 @@ namespace Microsoft.AspNet.SignalR.Transports
             }
         }
 
-        internal class RequestLifetime
+        internal struct RequestLifetime
         {
             private readonly HttpRequestLifeTime _lifetime;
             private readonly ForeverTransport _transport;

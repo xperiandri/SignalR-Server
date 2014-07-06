@@ -148,7 +148,7 @@ namespace Microsoft.AspNet.SignalR.Transports
                 // If the CTS is tripped or the request has ended then the connection isn't alive
                 return !(
                     CancellationToken.IsCancellationRequested ||
-                    (_requestLifeTime != null && _requestLifeTime.Task.IsCompleted) ||
+                    _requestLifeTime.Task.IsCompleted ||
                     _lastWriteTask.IsCanceled ||
                     _lastWriteTask.IsFaulted
                 );

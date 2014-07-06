@@ -105,10 +105,10 @@ namespace Microsoft.AspNet.SignalR.Messaging
             Dispose(true);
         }
 
-        private class WorkContext
+        private struct WorkContext
         {
-            public ISubscription Subscription;
-            public MessageBroker Broker;
+            public readonly ISubscription Subscription;
+            public readonly MessageBroker Broker;
 
             public WorkContext(ISubscription subscription, MessageBroker broker)
             {

@@ -89,11 +89,11 @@ namespace Microsoft.AspNet.SignalR.Messaging
             return context.StreamManager._send(context.Index, context.Messages);
         }
 
-        private class SendContext
+        private struct SendContext
         {
-            public ScaleoutStreamManager StreamManager;
-            public int Index;
-            public IList<Message> Messages;
+            public readonly ScaleoutStreamManager StreamManager;
+            public readonly int Index;
+            public readonly IList<Message> Messages;
 
             public SendContext(ScaleoutStreamManager scaleoutStream, int index, IList<Message> messages)
             {

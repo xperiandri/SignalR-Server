@@ -318,7 +318,7 @@ namespace Microsoft.AspNet.SignalR.Messaging
             }
         }
 
-        private class SendContext
+        private struct SendContext
         {
             private readonly Func<object, Task> _send;
             private readonly object _state;

@@ -140,10 +140,10 @@ namespace Microsoft.AspNet.SignalR.Transports
             return transport.Context.Response.Flush();
         }
 
-        private class ForeverFrameTransportContext
+        private struct ForeverFrameTransportContext
         {
-            public ForeverFrameTransport Transport;
-            public object State;
+            public readonly ForeverFrameTransport Transport;
+            public readonly object State;
 
             public ForeverFrameTransportContext(ForeverFrameTransport transport, object state)
             {

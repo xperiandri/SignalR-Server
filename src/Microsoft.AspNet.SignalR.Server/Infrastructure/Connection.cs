@@ -393,7 +393,7 @@ namespace Microsoft.AspNet.SignalR.Infrastructure
             }
         }
 
-        private class ReceiveContext
+        private struct ReceiveContext
         {
             private readonly Connection _connection;
             private readonly Func<PersistentResponse, object, Task<bool>> _callback;

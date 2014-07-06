@@ -10,9 +10,9 @@ using Microsoft.Framework.Logging;
 
 namespace Microsoft.AspNet.SignalR.Transports
 {
-    internal class HttpRequestLifeTime
+    internal struct HttpRequestLifeTime
     {
-        private readonly TaskCompletionSource<object> _lifetimeTcs = new TaskCompletionSource<object>();
+        private readonly TaskCompletionSource<object> _lifetimeTcs;
         private readonly TransportDisconnectBase _transport;
         private readonly TaskQueue _writeQueue;
 
@@ -22,6 +22,7 @@ namespace Microsoft.AspNet.SignalR.Transports
 
         public HttpRequestLifeTime(TransportDisconnectBase transport, TaskQueue writeQueue, ILogger logger, string connectionId)
         {
+            _lifetimeTcs = new TaskCompletionSource<object>();
             _transport = transport;
             _logger = logger;
             _connectionId = connectionId;
@@ -68,7 +69,7 @@ namespace Microsoft.AspNet.SignalR.Transports
             }
         }
 
-        private class LifetimeContext
+        private struct LifetimeContext
         {
             private readonly TaskCompletionSource<object> _lifetimeTcs;
             private readonly Exception _error;

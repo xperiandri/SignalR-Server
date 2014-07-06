@@ -197,10 +197,10 @@ namespace Microsoft.AspNet.SignalR.Transports
             Logger.WriteError(String.Format("OnError({0}, {1})", ConnectionId, error));
         }
 
-        private class WebSocketTransportContext
+        private struct WebSocketTransportContext
         {
-            public WebSocketTransport Transport;
-            public object State;
+            public readonly WebSocketTransport Transport;
+            public readonly object State;
 
             public WebSocketTransportContext(WebSocketTransport transport, object state)
             {
