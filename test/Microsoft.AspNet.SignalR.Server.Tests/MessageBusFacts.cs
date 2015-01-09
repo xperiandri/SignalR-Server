@@ -184,9 +184,8 @@ namespace Microsoft.AspNet.SignalR.Tests
         public void SubscribingTopicAfterNoSubscriptionsWhenGCStateSetsStateToHasSubscription()
         {
             var sp = ServiceProviderHelper.CreateServiceProvider();
-            var ta = new TypeActivator();
 
-            using (var bus = ta.CreateInstance<TestMessageBus>(sp))
+            using (var bus = ActivatorUtilities.CreateInstance<TestMessageBus>(sp))
             {
                 var subscriber = new TestSubscriber(new[] { "key" });
                 int retries = 0;
@@ -234,11 +233,10 @@ namespace Microsoft.AspNet.SignalR.Tests
                 });
             });
 
-            var ta = new TypeActivator();
 
             Topic topic;
 
-            using (var bus = ta.CreateInstance<TestMessageBus>(sp))
+            using (var bus = ActivatorUtilities.CreateInstance<TestMessageBus>(sp))
             {
                 var subscriber = new TestSubscriber(new[] { "key" });
                 int count = 0;

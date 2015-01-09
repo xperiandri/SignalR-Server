@@ -19,9 +19,8 @@ namespace Microsoft.AspNet.SignalR.Tests
         public void NewSubscriptionGetsAllMessages()
         {
             var sp = ServiceProviderHelper.CreateServiceProvider();
-            var ta = new TypeActivator();
 
-            using (var bus = ta.CreateInstance<TestScaleoutBus>(sp))
+            using (var bus = ActivatorUtilities.CreateInstance<TestScaleoutBus>(sp))
             {
                 var subscriber = new TestSubscriber(new[] { "key" });
                 var wh = new ManualResetEventSlim(initialState: false);
@@ -76,9 +75,8 @@ namespace Microsoft.AspNet.SignalR.Tests
         public void SubscriptionWithExistingCursor()
         {
             var sp = ServiceProviderHelper.CreateServiceProvider();
-            var ta = new TypeActivator();
 
-            using (var bus = ta.CreateInstance<TestScaleoutBus>(sp, 2))
+            using (var bus = ActivatorUtilities.CreateInstance<TestScaleoutBus>(sp, 2))
             {
                 var subscriber = new TestSubscriber(new[] { "key" });
                 var cd = new CountDownRange<int>(Enumerable.Range(2, 4));
@@ -131,9 +129,8 @@ namespace Microsoft.AspNet.SignalR.Tests
         public void SubscriptionPullFromMultipleStreamsInFairOrder()
         {
             var sp = ServiceProviderHelper.CreateServiceProvider();
-            var ta = new TypeActivator();
 
-            using (var bus = ta.CreateInstance<TestScaleoutBus>(sp, 3))
+            using (var bus = ActivatorUtilities.CreateInstance<TestScaleoutBus>(sp, 3))
             {
                 var subscriber = new TestSubscriber(new[] { "key" });
                 var cd = new OrderedCountDownRange<int>(new[] { 1, 2, 4, 3 });
@@ -194,9 +191,8 @@ namespace Microsoft.AspNet.SignalR.Tests
                 });
             });
 
-            var ta = new TypeActivator();
 
-            using (var bus = ta.CreateInstance<TestScaleoutBus>(sp))
+            using (var bus = ActivatorUtilities.CreateInstance<TestScaleoutBus>(sp))
             {
                 var subscriber = new TestSubscriber(new[] { "key" });
                 IDisposable subscription = null;
@@ -249,9 +245,8 @@ namespace Microsoft.AspNet.SignalR.Tests
                 });
             });
 
-            var ta = new TypeActivator();
 
-            using (var bus = ta.CreateInstance<TestScaleoutBus>(sp, 2))
+            using (var bus = ActivatorUtilities.CreateInstance<TestScaleoutBus>(sp, 2))
             {
                 var subscriber = new TestSubscriber(new[] { "key" });
                 IDisposable subscription = null;
@@ -307,9 +302,8 @@ namespace Microsoft.AspNet.SignalR.Tests
         public void SubscriptionGetsCorrectCursorsIfMoreKeysThanStreams()
         {
             var sp = ServiceProviderHelper.CreateServiceProvider();
-            var ta = new TypeActivator();
 
-            using (var bus = ta.CreateInstance<TestScaleoutBus>(sp))
+            using (var bus = ActivatorUtilities.CreateInstance<TestScaleoutBus>(sp))
             {
                 var subscriber = new TestSubscriber(new[] { "key" });
                 IDisposable subscription = null;
@@ -353,9 +347,8 @@ namespace Microsoft.AspNet.SignalR.Tests
         public void SubscriptionGetsCorrectCursorsIfLessKeysThanStreams()
         {
             var sp = ServiceProviderHelper.CreateServiceProvider();
-            var ta = new TypeActivator();
 
-            using (var bus = ta.CreateInstance<TestScaleoutBus>(sp, 2))
+            using (var bus = ActivatorUtilities.CreateInstance<TestScaleoutBus>(sp, 2))
             {
                 var subscriber = new TestSubscriber(new[] { "key" });
                 IDisposable subscription = null;
@@ -409,9 +402,8 @@ namespace Microsoft.AspNet.SignalR.Tests
         public void SubscriptionWithDefaultCursorGetsOnlyNewMessages()
         {
             var sp = ServiceProviderHelper.CreateServiceProvider();
-            var ta = new TypeActivator();
 
-            using (var bus = ta.CreateInstance<TestScaleoutBus>(sp, 1))
+            using (var bus = ActivatorUtilities.CreateInstance<TestScaleoutBus>(sp, 1))
             {
                 var subscriber = new TestSubscriber(new[] { "key" });
                 IDisposable subscription = null;
@@ -455,9 +447,8 @@ namespace Microsoft.AspNet.SignalR.Tests
         public void SubscriptionPublishingAfter()
         {
             var sp = ServiceProviderHelper.CreateServiceProvider();
-            var ta = new TypeActivator();
 
-            using (var bus = ta.CreateInstance<TestScaleoutBus>(sp))
+            using (var bus = ActivatorUtilities.CreateInstance<TestScaleoutBus>(sp))
             {
                 var subscriber = new TestSubscriber(new[] { "key" });
                 IDisposable subscription = null;
