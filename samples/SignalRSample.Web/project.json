@@ -1,10 +1,10 @@
 {
     "webroot": ".",
     "dependencies": {
-        "Microsoft.AspNet.Server.IIS": "1.0.0-*",
-        "Microsoft.AspNet.Server.WebListener": "1.0.0-*",
-        "Microsoft.AspNet.StaticFiles": "1.0.0-*",
-        "Microsoft.AspNet.SignalR.Server": "3.0.0-*",
+        "Microsoft.AspNet.Server.IIS": "1.0.0-beta4",
+        "Microsoft.AspNet.Server.WebListener": "1.0.0-beta4",
+        "Microsoft.AspNet.StaticFiles": "1.0.0-beta4",
+        "Microsoft.AspNet.SignalR.Server": "3.0.0-beta4",
         "Serilog": "1.4.113.0"
     },
     "commands": {
@@ -13,7 +13,7 @@
     "frameworks": {
         "dnx451": {
             "dependencies": {
-                "Microsoft.Framework.Logging.Serilog": "1.0.0-*"
+                "Microsoft.Framework.Logging.Serilog": "1.0.0-beta4"
             }
         },
         "dnxcore50": { }
