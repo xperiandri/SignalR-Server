@@ -1,15 +1,21 @@
 {
-    "version": "3.0.0-*",
+    "version": "3.0.0-beta6",
     "description": "Core server components for ASP.NET SignalR.",
     "dependencies": {
-        "Microsoft.AspNet.SignalR.Sources": { "version": "3.0.0-*", "type": "build" },
-        "Microsoft.AspNet.SignalR.Messaging": "3.0.0-*",
-        "Microsoft.AspNet.DataProtection": "1.0.0-*",
-        "Microsoft.AspNet.Hosting.Abstractions": "1.0.0-*",
-        "Microsoft.AspNet.Http.Extensions": "1.0.0-*",
-        "Microsoft.Framework.Logging": "1.0.0-*",
-        "Microsoft.Framework.NotNullAttribute.Sources": { "type": "build", "version": "1.0.0-*" },
-        "Microsoft.Framework.Runtime.Abstractions": "1.0.0-*",
+        "Microsoft.AspNet.SignalR.Sources": {
+            "version": "3.0.0-beta6",
+            "type": "build"
+        },
+        "Microsoft.AspNet.SignalR.Messaging": "3.0.0-beta6",
+        "Microsoft.AspNet.DataProtection": "1.0.0-beta6",
+        "Microsoft.AspNet.Hosting.Abstractions": "1.0.0-beta6",
+        "Microsoft.AspNet.Http.Extensions": "1.0.0-beta6",
+        "Microsoft.Framework.Logging": "1.0.0-beta6",
+        "Microsoft.Framework.NotNullAttribute.Sources": {
+            "type": "build",
+            "version": "1.0.0-beta6"
+        },
+        "Microsoft.Framework.Runtime.Abstractions": "1.0.0-beta6",
         "Newtonsoft.Json": "6.0.6"
     },
     "compilationOptions": {
@@ -18,21 +24,21 @@
     },
     "resources": "Scripts/**/*.*",
     "frameworks": {
-        "dnx451": { },
+        "dnx451": {},
         "dnxcore50": {
             "dependencies": {
-                "Microsoft.CSharp": "4.0.0-beta-*",
-                "System.Collections.Concurrent": "4.0.10-beta-*",
-                "System.Dynamic.Runtime": "4.0.10-beta-*",
-                "System.Linq.Expressions": "4.0.10-beta-*",
-                "System.Reflection.Emit": "4.0.0-beta-*",
-                "System.Reflection.Emit.ILGeneration": "4.0.0-beta-*",
-                "System.Reflection.Extensions": "4.0.0-beta-*",
-                "System.Reflection.Primitives": "4.0.0-beta-*",
-                "System.Security.Cryptography.RandomNumberGenerator": "4.0.0-beta-*",
-                "System.Threading.Thread": "4.0.0-beta-*",
-                "System.Threading.ThreadPool": "4.0.10-beta-*",
-                "System.Threading.Timer": "4.0.0-beta-*"
+                "Microsoft.CSharp": "4.0.0-beta-23109",
+                "System.Collections.Concurrent": "4.0.10-beta-23109",
+                "System.Dynamic.Runtime": "4.0.10-beta-23109",
+                "System.Linq.Expressions": "4.0.10-beta-23109",
+                "System.Reflection.Emit": "4.0.0-beta-23109",
+                "System.Reflection.Emit.ILGeneration": "4.0.0-beta-23109",
+                "System.Reflection.Extensions": "4.0.0-beta-23109",
+                "System.Reflection.Primitives": "4.0.0-beta-23109",
+                "System.Security.Cryptography.RandomNumberGenerator": "4.0.0-beta-23109",
+                "System.Threading.Thread": "4.0.0-beta-23109",
+                "System.Threading.ThreadPool": "4.0.10-beta-23109",
+                "System.Threading.Timer": "4.0.0-beta-23109"
             }
         }
     }
