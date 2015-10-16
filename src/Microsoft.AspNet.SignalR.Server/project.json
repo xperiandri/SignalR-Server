@@ -1,13 +1,19 @@
 {
-    "version": "3.0.0-*",
+    "version": "3.0.0-beta8",
     "description": "Core server components for ASP.NET SignalR.",
     "dependencies": {
-        "Microsoft.AspNet.SignalR.Sources": { "version": "3.0.0-*", "type": "build" },
-        "Microsoft.AspNet.SignalR.Messaging": "3.0.0-*",
-        "Microsoft.AspNet.DataProtection": "1.0.0-*",
-        "Microsoft.AspNet.Hosting.Abstractions": "1.0.0-*",
-        "Microsoft.AspNet.Http.Extensions": "1.0.0-*",
-        "Microsoft.Framework.NotNullAttribute.Sources": { "type": "build", "version": "1.0.0-*" },
+        "Microsoft.AspNet.SignalR.Sources": {
+            "version": "3.0.0-beta8",
+            "type": "build"
+        },
+        "Microsoft.AspNet.SignalR.Messaging": "3.0.0-beta8",
+        "Microsoft.AspNet.DataProtection": "1.0.0-beta8",
+        "Microsoft.AspNet.Hosting.Abstractions": "1.0.0-beta8",
+        "Microsoft.AspNet.Http.Extensions": "1.0.0-beta8",
+        "Microsoft.Framework.NotNullAttribute.Sources": {
+            "type": "build",
+            "version": "1.0.0-beta8"
+        },
         "Newtonsoft.Json": "6.0.6"
     },
     "compilationOptions": {
@@ -16,7 +22,7 @@
     },
     "resource": "Scripts/**/*.*",
     "frameworks": {
-        "dnx451": { },
-        "dnxcore50": { }
+        "dnx451": {},
+        "dnxcore50": {}
     }
 }

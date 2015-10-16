@@ -1,11 +1,17 @@
 {
-    "version": "3.0.0-*",
+    "version": "3.0.0-beta8",
     "description": "Core messaging components for ASP.NET SignalR.",
     "dependencies": {
-        "Microsoft.Framework.Logging": "1.0.0-*",
-        "Microsoft.Framework.OptionsModel": "1.0.0-*",
-        "Microsoft.Dnx.Runtime.Abstractions": { "version": "1.0.0-*", "type": "build" },
-        "Microsoft.AspNet.SignalR.Sources": { "version": "3.0.0-*", "type": "build" }
+        "Microsoft.Framework.Logging": "1.0.0-beta8",
+        "Microsoft.Framework.OptionsModel": "1.0.0-beta8",
+        "Microsoft.Dnx.Runtime.Abstractions": {
+            "version": "1.0.0-beta8",
+            "type": "build"
+        },
+        "Microsoft.AspNet.SignalR.Sources": {
+            "version": "3.0.0-beta8",
+            "type": "build"
+        }
     },
     "compilationOptions": {
         "warningsAsErrors": true,
@@ -13,25 +19,24 @@
     },
     "frameworks": {
         "dnx451": {
-            "dependencies": {
-            }
+            "dependencies": {}
         },
         "dnxcore50": {
             "dependencies": {
-                "Microsoft.CSharp": "4.0.1-beta-*",
-                "System.Collections.Concurrent": "4.0.11-beta-*",
-                "System.Dynamic.Runtime": "4.0.11-beta-*",
-                "System.Linq.Expressions": "4.0.11-beta-*",
-                "System.Reflection.Emit": "4.0.1-beta-*",
-                "System.Reflection.Emit.ILGeneration": "4.0.1-beta-*",
-                "System.Reflection.Extensions": "4.0.1-beta-*",
-                "System.Reflection.Primitives": "4.0.1-beta-*",
-                "System.Security.Cryptography.Algorithms": "4.0.0-beta-*",
-                "System.Threading.Thread": "4.0.0-beta-*",
-                "System.Threading.ThreadPool": "4.0.10-beta-*",
-                "System.Threading.Timer": "4.0.1-beta-*",
-                "System.Diagnostics.Tools": "4.0.1-beta-*",
-                "System.Text.Encoding.Extensions": "4.0.11-beta-*"
+                "Microsoft.CSharp": "4.0.1-beta-23409",
+                "System.Collections.Concurrent": "4.0.11-beta-23409",
+                "System.Dynamic.Runtime": "4.0.11-beta-23409",
+                "System.Linq.Expressions": "4.0.11-beta-23409",
+                "System.Reflection.Emit": "4.0.1-beta-23409",
+                "System.Reflection.Emit.ILGeneration": "4.0.1-beta-23409",
+                "System.Reflection.Extensions": "4.0.1-beta-23409",
+                "System.Reflection.Primitives": "4.0.1-beta-23409",
+                "System.Security.Cryptography.Algorithms": "4.0.0-beta-23409",
+                "System.Threading.Thread": "4.0.0-beta-23409",
+                "System.Threading.ThreadPool": "4.0.10-beta-23409",
+                "System.Threading.Timer": "4.0.1-beta-23409",
+                "System.Diagnostics.Tools": "4.0.1-beta-23409",
+                "System.Text.Encoding.Extensions": "4.0.11-beta-23409"
             }
         }
     }

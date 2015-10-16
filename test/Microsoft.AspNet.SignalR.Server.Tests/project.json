@@ -2,16 +2,15 @@
     "dependencies": {
         "SignalRSample.Web": "1.0.0",
         "Microsoft.AspNet.SignalR.Testing.Common": "1.0.0-*",
-        "Microsoft.AspNet.SignalR.Server": "3.0.0-*",
-        "xunit.runner.aspnet": "2.0.0-aspnet-*",
+        "Microsoft.AspNet.SignalR.Server": "3.0.0-beta8",
+        "xunit.runner.aspnet": "2.0.0-aspnet-beta8",
         "Moq": "4.2.1312.1622"
     },
     "compilationOptions": {
         "allowUnsafe": true
     },
     "frameworks": {
-        "dnx451": { }
+        "dnx451": {}
     },
-    "commands": {
-    }
+    "commands": {}
 }
