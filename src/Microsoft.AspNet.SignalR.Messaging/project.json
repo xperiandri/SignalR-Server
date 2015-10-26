@@ -4,7 +4,7 @@
     "dependencies": {
         "Microsoft.Extensions.Logging": "1.0.0-*",
         "Microsoft.Extensions.OptionsModel": "1.0.0-*",
-        "Microsoft.Dnx.Runtime.Abstractions": { "version": "1.0.0-*", "type": "build" },
+        "Microsoft.Extensions.PlatformAbstractions": { "version": "1.0.0-*", "type": "build" },
         "Microsoft.AspNet.SignalR.Sources": { "version": "3.0.0-*", "type": "build" }
     },
     "compilationOptions": {
