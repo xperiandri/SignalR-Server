@@ -13,7 +13,7 @@
       "type": "build"
     }
   },
-  "compilationOptions": {
+  "buildOptions": {
     "warningsAsErrors": true,
     "allowUnsafe": true,
     "keyFile": "../../tools/Key.snk"
