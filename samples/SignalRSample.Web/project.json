@@ -8,7 +8,7 @@
     "Microsoft.Extensions.Logging.Console": "1.0.0-*",
     "Microsoft.NETCore.Platforms": "1.0.1-*"
   },
-  "compilationOptions": {
+  "buildOptions": {
     "emitEntryPoint": true,
     "keyFile": "../../tools/Key.snk"
   },
@@ -27,10 +27,12 @@
       ]
     }
   },
-  "content": [
-    "web.config",
-    "wwwroot"
-  ],
+  "publishOptions": {
+    "include": [
+      "web.config",
+      "wwwroot"
+    ]
+  },
   "tools": {
     "Microsoft.AspNetCore.Server.IISIntegration.Tools": {
       "version": "1.0.0-*",
