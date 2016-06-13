@@ -42,5 +42,5 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
         {
             return library.Dependencies.Any(dependency => string.Equals(AssemblyRoot, dependency.Name, StringComparison.Ordinal));
         }
-}
+    }
 }
