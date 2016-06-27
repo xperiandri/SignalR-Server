@@ -1,12 +1,12 @@
 {
-  "version": "0.1.0-*",
+  "version": "0.1.0-rtm-21431",
   "shared": "*.cs",
   "dependencies": {},
   "frameworks": {
     "net451": {},
     "netstandard1.3": {
       "dependencies": {
-        "System.Runtime": "4.1.0-*"
+        "System.Runtime": "4.1.0"
       }
     }
   }

@@ -2,8 +2,8 @@
   "dependencies": {
     "SignalRSample.Web": "1.0.0",
     "Microsoft.AspNetCore.SignalR.Testing.Common": "1.0.0-*",
-    "Microsoft.AspNetCore.SignalR.Server": "0.1.0-*",
-    "Microsoft.AspNetCore.Testing": "1.0.0-*",
+    "Microsoft.AspNetCore.SignalR.Server": "0.1.0-rtm-21431",
+    "Microsoft.AspNetCore.Testing": "1.0.0-rtm-21431",
     "xunit": "2.1.0"
   },
   "buildOptions": {
@@ -18,13 +18,13 @@
         "portable-net451+win8"
       ],
       "dependencies": {
-        "dotnet-test-xunit": "1.0.0-*",
+        "dotnet-test-xunit": "1.0.0-rc3-000000-00",
         "Microsoft.NETCore.App": {
-          "version": "1.0.0-*",
+          "version": "1.0.0",
           "type": "platform"
         },
         "moq.netcore": "4.4.0-beta8",
-        "System.Diagnostics.TraceSource": "4.0.0-*"
+        "System.Diagnostics.TraceSource": "4.0.0"
       }
     },
     "net451": {
