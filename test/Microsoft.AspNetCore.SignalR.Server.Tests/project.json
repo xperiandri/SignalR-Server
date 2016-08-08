@@ -5,7 +5,7 @@
     "Microsoft.AspNetCore.SignalR.Testing.Common": "1.1.0-*",
     "Microsoft.AspNetCore.SignalR.Server": "0.2.0-*",
     "Microsoft.AspNetCore.Testing": "1.1.0-*",
-    "Moq": "4.6.25-*",
+    "Moq": "4.6.36-*",
     "xunit": "2.2.0-*"
   },
   "buildOptions": {
@@ -21,8 +21,7 @@
           "type": "platform"
         },
         "System.Diagnostics.TraceSource": "4.0.0-*"
-      },
-      "imports": "dotnet54"
+      }
     },
     "net451": {}
   }
