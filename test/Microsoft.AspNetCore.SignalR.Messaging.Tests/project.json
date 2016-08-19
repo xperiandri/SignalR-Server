@@ -22,5 +22,6 @@
       }
     },
     "net451": {}
-  }
+  },
+  "testRunner": "xunit"
 }
