@@ -36,7 +36,7 @@ namespace Microsoft.AspNetCore.SignalR.Tests
             var perfCounters = new SignalRPerformanceCounterManager(loggerFactory.Object);
             var logger = new Mock<ILogger>();
             var stream = new ScaleoutStream(logger.Object, "0", QueuingBehavior.InitialOnly, 1000, perfCounters);
-            
+
             int x = 0;
 
             stream.Send(_ =>
@@ -56,7 +56,7 @@ namespace Microsoft.AspNetCore.SignalR.Tests
             stream.Open();
 
             task.Wait();
-            
+
             Assert.Equal(2, x);
         }
 
@@ -186,19 +186,19 @@ namespace Microsoft.AspNetCore.SignalR.Tests
             stream.Open();
             stream.Send(async _ =>
             {
-                await Task.Delay(50);
+                await Task.Delay(50).ConfigureAwait(false);
                 x++;
             },
             null);
             stream.Send(async _ =>
             {
-                await Task.Delay(50);
+                await Task.Delay(50).ConfigureAwait(false); ;
                 x++;
             },
             null);
             stream.Send(async _ =>
             {
-                await Task.Delay(50);
+                await Task.Delay(50).ConfigureAwait(false); ;
                 x++;
             },
             null);
@@ -217,19 +217,19 @@ namespace Microsoft.AspNetCore.SignalR.Tests
             stream.Open();
             stream.Send(async _ =>
             {
-                await Task.Delay(50);
+                await Task.Delay(50).ConfigureAwait(false);
                 x++;
             },
             null);
             stream.Send(async _ =>
             {
-                await Task.Delay(50);
+                await Task.Delay(50).ConfigureAwait(false);
                 await TaskAsyncHelper.FromError(new Exception());
             },
             null);
             stream.Send(async _ =>
             {
-                await Task.Delay(50);
+                await Task.Delay(50).ConfigureAwait(false);
                 x++;
             },
             null);
@@ -248,14 +248,14 @@ namespace Microsoft.AspNetCore.SignalR.Tests
             stream.Open();
             stream.Send(async _ =>
             {
-                await Task.Delay(50);
+                await Task.Delay(50).ConfigureAwait(false);
                 x++;
             },
             null);
 
             Task t1 = stream.Send(async _ =>
             {
-                await Task.Delay(50);
+                await Task.Delay(50).ConfigureAwait(false);
                 await TaskAsyncHelper.FromError(new Exception());
             },
             null);
@@ -266,7 +266,7 @@ namespace Microsoft.AspNetCore.SignalR.Tests
 
             Task t2 = stream.Send(async _ =>
             {
-                await Task.Delay(50);
+                await Task.Delay(50).ConfigureAwait(false);
                 x++;
             },
             null);
@@ -301,7 +301,7 @@ namespace Microsoft.AspNetCore.SignalR.Tests
             stream.Open();
             stream.Send(async _ =>
             {
-                await Task.Delay(20);
+                await Task.Delay(20).ConfigureAwait(false);
                 x++;
             },
             null).Wait();

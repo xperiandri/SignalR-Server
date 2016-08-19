@@ -40,7 +40,7 @@ namespace Microsoft.AspNetCore.SignalR.Tests
         }
 
         [Fact]
-        public void CancelledTaskShouldThrowTaskCancelledAsync()
+        public async Task CancelledTaskShouldThrowTaskCancelledAsync()
         {
             Func<MessageResult, object, Task<bool>> callback = async (result, state) =>
             {
@@ -58,7 +58,14 @@ namespace Microsoft.AspNetCore.SignalR.Tests
             using (subscription.Object)
             {
                 Task task = subscription.Object.Work();
-                TestUtilities.AssertUnwrappedException<TaskCanceledException>(() => task.Wait());
+                try
+                {
+                    await task;
+                    Assert.True(false);
+                }
+                catch(TaskCanceledException)
+                { }
+
                 Assert.True(task.IsCanceled);
             }
         }
@@ -91,7 +98,7 @@ namespace Microsoft.AspNetCore.SignalR.Tests
         }
 
         [Fact]
-        public void FaultedTaskShouldPropagateAsync()
+        public async Task FaultedTaskShouldPropagateAsync()
         {
             Func<MessageResult, object, Task<bool>> callback = async (result, state) =>
             {
@@ -108,7 +115,14 @@ namespace Microsoft.AspNetCore.SignalR.Tests
             using (subscription.Object)
             {
                 Task task = subscription.Object.Work();
-                TestUtilities.AssertUnwrappedException<Exception>(() => task.Wait());
+                try
+                {
+                    await task;
+                    Assert.True(false);
+                }
+                catch (Exception)
+                { }
+
                 Assert.True(task.IsFaulted);
             }
         }
