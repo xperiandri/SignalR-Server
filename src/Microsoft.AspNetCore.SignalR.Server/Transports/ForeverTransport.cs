@@ -53,6 +53,15 @@ namespace Microsoft.AspNetCore.SignalR.Transports
             get { return _jsonSerializer; }
         }
 
+        protected void EnsureFormContentType()
+        {
+            // Managed SignalR 2.x clients don't set content type which prevents from parsing the body as a form
+            if (string.IsNullOrEmpty(Context.Request.ContentType))
+            {
+                Context.Request.ContentType = FormContentType;
+            }
+        }
+
         protected virtual void OnSending(string payload)
         {
             Heartbeat.MarkConnection(this);
@@ -86,6 +95,8 @@ namespace Microsoft.AspNetCore.SignalR.Transports
 
         protected async Task ProcessRequestCore(ITransportConnection connection)
         {
+            EnsureFormContentType();
+
             Connection = connection;
 
             if (IsSendRequest)
@@ -132,12 +143,6 @@ namespace Microsoft.AspNetCore.SignalR.Transports
 
         protected virtual async Task ProcessSendRequest()
         {
-            // Managed SignalR 2.x clients don't set content type which prevents from parsing the body as a form
-            if (string.IsNullOrEmpty(Context.Request.ContentType))
-            {
-                Context.Request.ContentType = FormContentType;
-            }
-
             var form = await Context.Request.ReadFormAsync().PreserveCulture();
             string data = form["data"];
 

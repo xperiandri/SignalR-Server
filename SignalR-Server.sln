@@ -1,7 +1,6 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.22508.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{34D5CA7F-AA6E-45AF-87B8-13DC970D68C9}"
 EndProject
@@ -27,6 +26,10 @@ EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.AspNetCore.SignalR.Messaging.Tests", "test\Microsoft.AspNetCore.SignalR.Messaging.Tests\Microsoft.AspNetCore.SignalR.Messaging.Tests.xproj", "{1CD4CDAC-42AB-4DE8-BF94-DAB7CC15B171}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.AspNetCore.SignalR.Testing.Common", "test\Microsoft.AspNetCore.SignalR.Testing.Common\Microsoft.AspNetCore.SignalR.Testing.Common.xproj", "{96A3A3F7-02C0-4E80-9F1B-0E269C07868D}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.AspNetCore.SignalR.CompatTests.Server", "test\Microsoft.AspNetCore.SignalR.CompatTests.Server\Microsoft.AspNetCore.SignalR.CompatTests.Server.xproj", "{DF38FBD7-E422-48D6-AB2D-C62516B480EA}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.AspNetCore.SignalR.CompatTests", "test\Microsoft.AspNetCore.SignalR.CompatTests\Microsoft.AspNetCore.SignalR.CompatTests.xproj", "{78FA5994-9211-40BD-9EA3-C08ADDBD5DC2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -116,6 +119,30 @@ Global
 		{96A3A3F7-02C0-4E80-9F1B-0E269C07868D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{96A3A3F7-02C0-4E80-9F1B-0E269C07868D}.Release|x86.ActiveCfg = Release|Any CPU
 		{96A3A3F7-02C0-4E80-9F1B-0E269C07868D}.Release|x86.Build.0 = Release|Any CPU
+		{DF38FBD7-E422-48D6-AB2D-C62516B480EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF38FBD7-E422-48D6-AB2D-C62516B480EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF38FBD7-E422-48D6-AB2D-C62516B480EA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{DF38FBD7-E422-48D6-AB2D-C62516B480EA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{DF38FBD7-E422-48D6-AB2D-C62516B480EA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DF38FBD7-E422-48D6-AB2D-C62516B480EA}.Debug|x86.Build.0 = Debug|Any CPU
+		{DF38FBD7-E422-48D6-AB2D-C62516B480EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF38FBD7-E422-48D6-AB2D-C62516B480EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF38FBD7-E422-48D6-AB2D-C62516B480EA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{DF38FBD7-E422-48D6-AB2D-C62516B480EA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{DF38FBD7-E422-48D6-AB2D-C62516B480EA}.Release|x86.ActiveCfg = Release|Any CPU
+		{DF38FBD7-E422-48D6-AB2D-C62516B480EA}.Release|x86.Build.0 = Release|Any CPU
+		{78FA5994-9211-40BD-9EA3-C08ADDBD5DC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78FA5994-9211-40BD-9EA3-C08ADDBD5DC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78FA5994-9211-40BD-9EA3-C08ADDBD5DC2}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{78FA5994-9211-40BD-9EA3-C08ADDBD5DC2}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{78FA5994-9211-40BD-9EA3-C08ADDBD5DC2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{78FA5994-9211-40BD-9EA3-C08ADDBD5DC2}.Debug|x86.Build.0 = Debug|Any CPU
+		{78FA5994-9211-40BD-9EA3-C08ADDBD5DC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78FA5994-9211-40BD-9EA3-C08ADDBD5DC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78FA5994-9211-40BD-9EA3-C08ADDBD5DC2}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{78FA5994-9211-40BD-9EA3-C08ADDBD5DC2}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{78FA5994-9211-40BD-9EA3-C08ADDBD5DC2}.Release|x86.ActiveCfg = Release|Any CPU
+		{78FA5994-9211-40BD-9EA3-C08ADDBD5DC2}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -128,5 +155,7 @@ Global
 		{C41C7A05-ADC3-4771-8F8D-18B86CE7FACC} = {34D5CA7F-AA6E-45AF-87B8-13DC970D68C9}
 		{1CD4CDAC-42AB-4DE8-BF94-DAB7CC15B171} = {6AA3BF40-BE9D-4212-9826-138CE61FF42F}
 		{96A3A3F7-02C0-4E80-9F1B-0E269C07868D} = {6AA3BF40-BE9D-4212-9826-138CE61FF42F}
+		{DF38FBD7-E422-48D6-AB2D-C62516B480EA} = {6AA3BF40-BE9D-4212-9826-138CE61FF42F}
+		{78FA5994-9211-40BD-9EA3-C08ADDBD5DC2} = {6AA3BF40-BE9D-4212-9826-138CE61FF42F}
 	EndGlobalSection
 EndGlobal

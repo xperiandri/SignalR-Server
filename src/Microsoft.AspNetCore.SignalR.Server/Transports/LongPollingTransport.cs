@@ -225,6 +225,7 @@ namespace Microsoft.AspNetCore.SignalR.Transports
             {
                 await Received(data).PreserveCulture();
             }
+
         }
 
         private static Task WriteInit(LongPollingTransport transport)
