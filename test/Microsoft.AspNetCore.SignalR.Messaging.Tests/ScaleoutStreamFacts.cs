@@ -186,18 +186,21 @@ namespace Microsoft.AspNetCore.SignalR.Tests
             stream.Open();
             stream.Send(async _ =>
             {
+                Console.WriteLine("1");
                 await Task.Delay(50);
                 x++;
             },
             null);
             stream.Send(async _ =>
             {
+                Console.WriteLine("2");
                 await Task.Delay(50);
                 x++;
             },
             null);
             stream.Send(async _ =>
             {
+                Console.WriteLine("3");
                 await Task.Delay(50);
                 x++;
             },
@@ -217,18 +220,21 @@ namespace Microsoft.AspNetCore.SignalR.Tests
             stream.Open();
             stream.Send(async _ =>
             {
+                Console.WriteLine("1");
                 await Task.Delay(50);
                 x++;
             },
             null);
             stream.Send(async _ =>
             {
+                Console.WriteLine("2");
                 await Task.Delay(50);
                 await TaskAsyncHelper.FromError(new Exception());
             },
             null);
             stream.Send(async _ =>
             {
+                Console.WriteLine("3");
                 await Task.Delay(50);
                 x++;
             },
