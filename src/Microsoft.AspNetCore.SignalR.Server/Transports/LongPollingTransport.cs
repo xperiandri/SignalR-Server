@@ -96,9 +96,9 @@ namespace Microsoft.AspNetCore.SignalR.Transports
         {
             _lastMessageId = Context.Request.Query["messageId"];
 
-            if (_lastMessageId == null && Context.Request.HasFormContentType)
+            if (_lastMessageId == null)
             {
-                var form = await Context.Request.ReadFormAsync().PreserveCulture();
+                var form = await ReadFormIgnoringContentTypeAsync(Context).PreserveCulture();
                 _lastMessageId = form["messageId"];
             }
         }
@@ -110,7 +110,7 @@ namespace Microsoft.AspNetCore.SignalR.Transports
 
             if (groupsToken.Count > 0 && Context.Request.HasFormContentType)
             {
-                var form = await Context.Request.ReadFormAsync().PreserveCulture();
+                var form = await ReadFormIgnoringContentTypeAsync(Context).PreserveCulture();
                 groupsToken = form["groupsToken"];
             }
             return groupsToken;
@@ -212,13 +212,15 @@ namespace Microsoft.AspNetCore.SignalR.Transports
 
         protected override async Task ProcessSendRequest()
         {
-            var form = await Context.Request.ReadFormAsync().PreserveCulture();
-            string data = (string)form["data"] ?? Context.Request.Query["data"];
+            // Force the content type to the right value. ASP.NET Core is picky about that and SignalR 2.x clients are bad at it :(
+            var form = await ReadFormIgnoringContentTypeAsync(Context).PreserveCulture();
+            var data = (string)form["data"] ?? Context.Request.Query["data"];
 
             if (Received != null)
             {
                 await Received(data).PreserveCulture();
             }
+
         }
 
         private static Task WriteInit(LongPollingTransport transport)

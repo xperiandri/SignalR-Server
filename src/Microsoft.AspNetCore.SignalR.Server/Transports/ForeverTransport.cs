@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR.Infrastructure;
 using Microsoft.AspNetCore.SignalR.Json;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -130,8 +131,8 @@ namespace Microsoft.AspNetCore.SignalR.Transports
 
         protected virtual async Task ProcessSendRequest()
         {
-            var form = await Context.Request.ReadFormAsync().PreserveCulture();
-            string data = form["data"];
+            var form = await ReadFormIgnoringContentTypeAsync(Context).PreserveCulture();
+            var data = (string)form["data"];
 
             if (Received != null)
             {
@@ -152,7 +153,7 @@ namespace Microsoft.AspNetCore.SignalR.Transports
             {
                 if (_protocolResolver.SupportsDelayedStart(Context.Request))
                 {
-                    // TODO: Ensure delegate continues to use the C# Compiler static delegate caching optimization. 
+                    // TODO: Ensure delegate continues to use the C# Compiler static delegate caching optimization.
                     initialize = () => connection.Initialize(ConnectionId);
                 }
                 else
@@ -301,6 +302,12 @@ namespace Microsoft.AspNetCore.SignalR.Transports
             }
 
             return TaskAsyncHelper.Empty;
+        }
+
+        internal static async Task<IFormCollection> ReadFormIgnoringContentTypeAsync(HttpContext context)
+        {
+            var reader = new FormReader(context.Request.Body);
+            return new FormCollection(await reader.ReadFormAsync().PreserveCulture());
         }
 
         private class ForeverTransportContext

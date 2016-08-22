@@ -1,0 +1,22 @@
+﻿{
+  "version": "1.0.0-*",
+  "buildOptions": {
+    "allowUnsafe": true,
+    "keyFile": "../../tools/Key.snk"
+  },
+  "testRunner": "xunit",
+
+  "dependencies": {
+    "Microsoft.AspNet.SignalR.Client": "2.2.1",
+    "Microsoft.AspNetCore.Server.IntegrationTesting": "0.2.0-*",
+    "xunit": "2.2.0-*",
+    "dotnet-test-xunit": "2.2.0-*",
+    "Microsoft.Extensions.PlatformAbstractions": "1.1.0-*",
+    "Microsoft.Extensions.Logging": "1.1.0-*",
+    "Microsoft.Extensions.Logging.Console": "1.1.0-*"
+  },
+
+  "frameworks": {
+    "net46": {}
+  }
+}
