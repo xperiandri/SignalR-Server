@@ -1,7 +1,8 @@
-using Microsoft.AspNetCore.SignalR.Infrastructure;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using Microsoft.AspNetCore.SignalR.Infrastructure;
 using Xunit;
 
 namespace Microsoft.AspNetCore.SignalR.Tests
@@ -43,6 +44,19 @@ namespace Microsoft.AspNetCore.SignalR.Tests
             var s = encoding.GetString(buffer.Array, 0, buffer.Count);
 
             Assert.Equal("Hello World", s);
+        }
+
+        [Fact]
+        public void StringOverrideBehavesAsCharArray()
+        {
+            var writer = new MemoryPoolTextWriter(new MemoryPool());
+            var testTxt = new string('m', 260);
+
+            writer.Write(testTxt.ToCharArray(), 0, testTxt.Length);
+            writer.Flush();
+
+            var encoding = new UTF8Encoding();
+            Assert.Equal(testTxt, encoding.GetString(writer.Buffer.ToArray()));
         }
     }
 }
