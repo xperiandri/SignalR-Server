@@ -315,22 +315,6 @@ namespace Microsoft.AspNetCore.SignalR.Messaging
         }
 
         /// <summary>
-        /// The supplied frameId is in the incorrect format.
-        /// </summary>
-        internal static string Error_InvalidForeverFrameId
-        {
-            get { return GetString("Error_InvalidForeverFrameId"); }
-        }
-
-        /// <summary>
-        /// The supplied frameId is in the incorrect format.
-        /// </summary>
-        internal static string FormatError_InvalidForeverFrameId()
-        {
-            return GetString("Error_InvalidForeverFrameId");
-        }
-
-        /// <summary>
         /// '{0}' is not a {1}.
         /// </summary>
         internal static string Error_IsNotA

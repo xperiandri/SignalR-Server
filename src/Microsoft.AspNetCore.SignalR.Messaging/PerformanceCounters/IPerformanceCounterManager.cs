@@ -27,11 +27,6 @@ namespace Microsoft.AspNetCore.SignalR.Infrastructure
         IPerformanceCounter ConnectionsDisconnected { get; }
 
         /// <summary>
-        /// Gets the performance counter representing the number of connections currently connected using ForeverFrame transport.
-        /// </summary>
-        IPerformanceCounter ConnectionsCurrentForeverFrame { get; }
-
-        /// <summary>
         /// Gets the performance counter representing the number of connections currently connected using LongPolling transport.
         /// </summary>
         IPerformanceCounter ConnectionsCurrentLongPolling { get; }

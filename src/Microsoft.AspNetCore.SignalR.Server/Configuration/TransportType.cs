@@ -16,11 +16,10 @@ namespace Microsoft.AspNetCore.SignalR
         /// <summary>
         /// All transports except for long-polling
         /// </summary>
-        Streaming = WebSockets | ServerSentEvents | ForeverFrame,
+        Streaming = WebSockets | ServerSentEvents,
 
         WebSockets = 1,
         ServerSentEvents = 2,
-        ForeverFrame = 4,
-        LongPolling = 8
+        LongPolling = 4
     }
 }

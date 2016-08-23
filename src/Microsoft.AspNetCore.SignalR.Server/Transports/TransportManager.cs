@@ -45,10 +45,6 @@ namespace Microsoft.AspNetCore.SignalR.Transports
             {
                 Register("serverSentEvents", context => ActivatorUtilities.CreateInstance<ServerSentEventsTransport>(serviceProvider, context));
             }
-            if (enabledTransports.HasFlag(TransportType.ForeverFrame))
-            {
-                Register("foreverFrame", context => ActivatorUtilities.CreateInstance<ForeverFrameTransport>(serviceProvider, context));
-            }
             if (enabledTransports.HasFlag(TransportType.LongPolling))
             {
                 Register("longPolling", context => ActivatorUtilities.CreateInstance<LongPollingTransport>(serviceProvider, context));

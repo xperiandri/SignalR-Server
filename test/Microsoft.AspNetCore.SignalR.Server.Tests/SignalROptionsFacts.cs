@@ -245,7 +245,6 @@ namespace Microsoft.AspNetCore.SignalR.Tests
             options.Transports.EnabledTransports = TransportType.LongPolling;
 
             Assert.True(options.Transports.EnabledTransports.HasFlag(TransportType.LongPolling));
-            Assert.False(options.Transports.EnabledTransports.HasFlag(TransportType.ForeverFrame));
             Assert.False(options.Transports.EnabledTransports.HasFlag(TransportType.ServerSentEvents));
             Assert.False(options.Transports.EnabledTransports.HasFlag(TransportType.WebSockets));
         }
@@ -257,7 +256,6 @@ namespace Microsoft.AspNetCore.SignalR.Tests
             options.Transports.EnabledTransports = TransportType.Streaming;
 
             Assert.False(options.Transports.EnabledTransports.HasFlag(TransportType.LongPolling));
-            Assert.True(options.Transports.EnabledTransports.HasFlag(TransportType.ForeverFrame));
             Assert.True(options.Transports.EnabledTransports.HasFlag(TransportType.ServerSentEvents));
             Assert.True(options.Transports.EnabledTransports.HasFlag(TransportType.WebSockets));
         }
