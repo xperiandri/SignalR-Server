@@ -3,6 +3,7 @@
 
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +12,6 @@ using Microsoft.AspNetCore.SignalR.Json;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.AspNetCore.SignalR.Transports
 {
@@ -21,7 +21,7 @@ namespace Microsoft.AspNetCore.SignalR.Transports
         private readonly IPerformanceCounterManager _counters;
         private bool _responseSent;
 
-        private static readonly byte[] _keepAlive = new byte[] { 32 };
+        private static readonly ArraySegment<byte> _keepAlive = new ArraySegment<byte>(new byte[] { 32 });
 
         public LongPollingTransport(HttpContext context,
                                     JsonSerializer jsonSerializer,
@@ -236,7 +236,7 @@ namespace Microsoft.AspNetCore.SignalR.Transports
                 return TaskAsyncHelper.Empty;
             }
 
-            transport.Context.Response.Write(new ArraySegment<byte>(_keepAlive));
+            transport.Context.Response.Write(_keepAlive);
 
             return transport.Context.Response.Flush();
         }

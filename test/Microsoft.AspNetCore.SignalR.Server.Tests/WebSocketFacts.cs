@@ -109,7 +109,7 @@ namespace Microsoft.AspNetCore.SignalR.Tests
         [Fact]
         public async Task DefaultWebSocketHandlerOperationsNoopAfterClose()
         {
-            var handler = new DefaultWebSocketHandler(maxIncomingMessageSize: null, 
+            var handler = new DefaultWebSocketHandler(maxIncomingMessageSize: null,
                                                       logger: new Mock<ILogger>().Object);
 
             var initialWebSocket = new Mock<WebSocket>();
@@ -121,13 +121,13 @@ namespace Microsoft.AspNetCore.SignalR.Tests
                 .Returns(TaskAsyncHelper.Empty);
 
             initialWebSocket.Setup(w => w.ReceiveAsync(It.IsAny<ArraySegment<byte>>(), CancellationToken.None))
-                     .Returns(Task.FromResult(new WebSocketReceiveResult(0, WebSocketMessageType.Close, endOfMessage: true)));
+                 .Returns(Task.FromResult(new WebSocketReceiveResult(0, WebSocketMessageType.Close, endOfMessage: true)));
 
             await handler.ProcessWebSocketRequestAsync(initialWebSocket.Object, CancellationToken.None);
-            
+
             // Swap the socket here so we can verify what happens after the task returns
             var afterWebSocket = new Mock<WebSocket>();
-            
+
             handler.WebSocket = afterWebSocket.Object;
 
             await handler.Send(new ArraySegment<byte>(Encoding.UTF8.GetBytes("Hello World")));

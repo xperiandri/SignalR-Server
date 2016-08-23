@@ -4,7 +4,6 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
@@ -20,7 +19,6 @@ namespace Microsoft.AspNetCore.SignalR.Transports
     {
         private readonly HttpContext _context;
         private readonly ITransportHeartbeat _heartbeat;
-        private TextWriter _outputWriter;
 
         private ILogger _logger;
 

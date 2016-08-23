@@ -212,8 +212,8 @@ namespace Microsoft.AspNetCore.SignalR.Transports
 
         private class WebSocketTransportContext
         {
-            public WebSocketTransport Transport;
-            public object State;
+            public readonly WebSocketTransport Transport;
+            public readonly object State;
 
             public WebSocketTransportContext(WebSocketTransport transport, object state)
             {

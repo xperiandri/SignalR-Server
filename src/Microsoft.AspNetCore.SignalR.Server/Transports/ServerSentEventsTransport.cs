@@ -112,8 +112,8 @@ namespace Microsoft.AspNetCore.SignalR.Transports
 
         private class SendContext
         {
-            public ServerSentEventsTransport Transport;
-            public object State;
+            public readonly ServerSentEventsTransport Transport;
+            public readonly object State;
 
             public SendContext(ServerSentEventsTransport transport, object state)
             {
