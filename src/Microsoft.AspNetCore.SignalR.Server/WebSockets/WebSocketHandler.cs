@@ -51,7 +51,7 @@ namespace Microsoft.AspNetCore.SignalR.WebSockets
 
         public virtual Task SendAsync(ArraySegment<byte> message, WebSocketMessageType messageType, bool endOfMessage = true)
         {
-            if (WebSocket.State != WebSocketState.Open)
+            if (GetWebSocketState(WebSocket) != WebSocketState.Open)
             {
                 return TaskAsyncHelper.Empty;
             }
@@ -62,7 +62,7 @@ namespace Microsoft.AspNetCore.SignalR.WebSockets
             {
                 var context = (SendContext)state;
 
-                if (context.Handler.WebSocket.State != WebSocketState.Open)
+                if (GetWebSocketState(context.Handler.WebSocket) != WebSocketState.Open)
                 {
                     return;
                 }
@@ -231,9 +231,23 @@ namespace Microsoft.AspNetCore.SignalR.WebSockets
 
         private static bool IsClosedOrClosedSent(WebSocket webSocket)
         {
-            return webSocket.State == WebSocketState.Closed ||
-                   webSocket.State == WebSocketState.CloseSent ||
-                   webSocket.State == WebSocketState.Aborted;
+            var webSocketState = GetWebSocketState(webSocket);
+
+            return webSocketState == WebSocketState.Closed ||
+                   webSocketState == WebSocketState.CloseSent ||
+                   webSocketState == WebSocketState.Aborted;
+        }
+
+        private static WebSocketState GetWebSocketState(WebSocket webSocket)
+        {
+            try
+            {
+                return webSocket.State;
+            }
+            catch (ObjectDisposedException)
+            {
+                return WebSocketState.Closed;
+            }
         }
 
         private class CloseContext
