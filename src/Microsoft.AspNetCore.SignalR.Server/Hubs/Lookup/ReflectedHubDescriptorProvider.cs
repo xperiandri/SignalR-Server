@@ -105,17 +105,18 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
             }
             catch (ReflectionTypeLoadException ex)
             {
-                _logger.LogWarning("Some of the classes from assembly \"{0}\" could Not be loaded when searching for Hubs. [{1}]\r\n" +
-                                     "Original exception type: {2}\r\n" +
-                                     "Original exception message: {3}\r\n",
-                                     a.FullName,
+                _logger.LogWarning(
+                    "Some of the classes from assembly \"{0}\" could Not be loaded when searching for Hubs. [{1}]" + Environment.NewLine +
+                    "Original exception type: {2}" + Environment.NewLine +
+                    "Original exception message: {3}" + Environment.NewLine,
+                    a.FullName,
 #if NET451
-                                     a.Location,
+                    a.Location,
 #else
-                                     null,
+                    null,
 #endif
-                                     ex.GetType().Name,
-                                     ex.Message);
+                    ex.GetType().Name,
+                    ex.Message);
 
                 if (ex.LoaderExceptions != null)
                 {
@@ -123,7 +124,7 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
 
                     foreach (var exception in ex.LoaderExceptions)
                     {
-                        _logger.LogWarning("{0}\r\n", exception);
+                        _logger.LogWarning("{0}" + Environment.NewLine, exception);
                     }
                 }
 
