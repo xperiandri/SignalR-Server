@@ -127,6 +127,15 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
             methodBuilder.SetReturnType(interfaceMethodInfo.ReturnType);
             methodBuilder.SetParameters(paramTypes);
 
+            // Sets the number of generic type parameters
+            var genericTypeNames =
+                paramTypes.Where(p => p.IsGenericParameter).Select(p => p.Name).Distinct().ToArray();
+
+            if (genericTypeNames.Any())
+            {
+                methodBuilder.DefineGenericParameters(genericTypeNames);
+            }
+
             ILGenerator generator = methodBuilder.GetILGenerator();
 
             // Declare local variable to store the arguments to IClientProxy.Invoke
