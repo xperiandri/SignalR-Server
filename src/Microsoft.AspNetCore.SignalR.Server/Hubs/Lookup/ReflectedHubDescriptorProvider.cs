@@ -117,6 +117,16 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
                                      ex.GetType().Name,
                                      ex.Message);
 
+                if (ex.LoaderExceptions != null)
+                {
+                    _logger.LogWarning("Loader exceptions messages: ");
+
+                    foreach (var exception in ex.LoaderExceptions)
+                    {
+                        _logger.LogWarning("{0}\r\n", exception);
+                    }
+                }
+
                 return ex.Types.Where(t => t != null);
             }
             catch (Exception ex)
