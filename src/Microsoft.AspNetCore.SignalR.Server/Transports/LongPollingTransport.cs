@@ -212,6 +212,12 @@ namespace Microsoft.AspNetCore.SignalR.Transports
 
         protected override async Task ProcessSendRequest()
         {
+            // Managed SignalR 2.x clients don't set content type which prevents from parsing the body as a form
+            if (string.IsNullOrEmpty(Context.Request.ContentType))
+            {
+                Context.Request.ContentType = FormContentType;
+            }
+
             var form = await Context.Request.ReadFormAsync().PreserveCulture();
             string data = (string)form["data"] ?? Context.Request.Query["data"];
 
