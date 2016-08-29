@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.SignalR.Configuration;
-using Microsoft.AspNetCore.SignalR.Hosting;
 using Microsoft.AspNetCore.SignalR.Infrastructure;
 using Microsoft.AspNetCore.SignalR.Json;
 using Microsoft.AspNetCore.SignalR.Transports;
@@ -124,6 +121,38 @@ namespace Microsoft.AspNetCore.SignalR.Tests.Transports
             Assert.Equal(JsonUtility.JavaScriptMimeType, transport.TestContentType.Result);
         }
 
+        [Theory]
+        [InlineData(false, "foo", null, "foo")]
+        [InlineData(false, "foo", "bar", "foo")]
+        [InlineData(false, null, "bar", null)]
+        [InlineData(true, "foo", null, "foo")]
+        [InlineData(true, "foo", "bar", "foo")]
+        [InlineData(true, null, "bar", "bar")]
+        public async Task VerifyGroupsTokenReadCorrectly(bool hasFormContentType, string queryStringGroupsToken,
+            string formGroupsToken, string expectedGroupsToken)
+        {
+            var queryString = new Dictionary<string, string>();
+            if (!string.IsNullOrEmpty(queryStringGroupsToken))
+            {
+                queryString.Add("groupsToken", queryStringGroupsToken);
+            }
+
+            var form = new Dictionary<string, string>();
+            if (!string.IsNullOrEmpty(formGroupsToken))
+            {
+                form.Add("groupsToken", formGroupsToken);
+            }
+
+            var testContext = new TestContext("/poll", queryString, form);
+            testContext.MockRequest.SetupGet(r => r.HasFormContentType).Returns(hasFormContentType);
+
+            var longPollingTransport = TestLongPollingTransport.Create(testContext);
+
+            var groupsToken = await longPollingTransport.GetGroupsToken();
+
+            Assert.Equal(expectedGroupsToken, groupsToken);
+        }
+
         private static ITransportConnection CreateMockTransportConnection()
         {
             var transportConnection = new Mock<ITransportConnection>();
@@ -155,10 +184,14 @@ namespace Microsoft.AspNetCore.SignalR.Tests.Transports
                 string requestPath,
                 Dictionary<string, string> queryString = null)
             {
-                TestLongPollingTransport transport = null;
-                var context = new TestContext(requestPath, queryString);
+                return Create(new TestContext(requestPath, queryString));
+            }
 
-                context.MockResponse.SetupSet(m => m.ContentType = It.IsAny<string>()).Callback<string>(contentType =>
+            public static TestLongPollingTransport Create(TestContext testContext)
+            {
+                TestLongPollingTransport transport = null;
+
+                testContext.MockResponse.SetupSet(m => m.ContentType = It.IsAny<string>()).Callback<string>(contentType =>
                 {
                     transport._contentTypeTcs.SetResult(contentType);
                 });
@@ -173,7 +206,7 @@ namespace Microsoft.AspNetCore.SignalR.Tests.Transports
                 var pool = new Mock<IMemoryPool>();
 
                 transport = new TestLongPollingTransport(
-                    context.MockHttpContext.Object,
+                    testContext.MockHttpContext.Object,
                     json,
                     heartBeat.Object,
                     counters.Object,
