@@ -153,6 +153,38 @@ namespace Microsoft.AspNetCore.SignalR.Tests.Transports
             Assert.Equal(expectedGroupsToken, groupsToken);
         }
 
+        [Theory]
+        [InlineData(false, "foo", null, "foo")]
+        [InlineData(false, "foo", "bar", "foo")]
+        [InlineData(false, null, "bar", null)]
+        [InlineData(true, "foo", null, "foo")]
+        [InlineData(true, "foo", "bar", "foo")]
+        [InlineData(true, null, "bar", "bar")]
+        public async Task VerifyMessageIdReadCorrectly(bool hasFormContentType, string queryStringMessageId,
+            string formMessageId, string expectedMessageId)
+        {
+            var queryString = new Dictionary<string, string>();
+            if (!string.IsNullOrEmpty(queryStringMessageId))
+            {
+                queryString.Add("messageId", queryStringMessageId);
+            }
+
+            var form = new Dictionary<string, string>();
+            if (!string.IsNullOrEmpty(formMessageId))
+            {
+                form.Add("messageId", formMessageId);
+            }
+
+            var testContext = new TestContext("/poll", queryString, form);
+            testContext.MockRequest.SetupGet(r => r.HasFormContentType).Returns(hasFormContentType);
+
+            var longPollingTransport = TestLongPollingTransport.Create(testContext);
+
+            await longPollingTransport.InitializeMessageId();
+
+            Assert.Equal(expectedMessageId, longPollingTransport.LastMessageId);
+        }
+
         private static ITransportConnection CreateMockTransportConnection()
         {
             var transportConnection = new Mock<ITransportConnection>();
@@ -226,6 +258,16 @@ namespace Microsoft.AspNetCore.SignalR.Tests.Transports
             public bool TestSuppressReconnect
             {
                 get { return SuppressReconnect; }
+            }
+
+            public new async Task InitializeMessageId()
+            {
+                await base.InitializeMessageId();
+            }
+
+            public new string LastMessageId
+            {
+                get { return base.LastMessageId; }
             }
         }
     }
