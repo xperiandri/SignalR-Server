@@ -31,13 +31,5 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
         [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Justification = "Type is used for serialization.")]
         [JsonProperty("A")]
         public object[] Args { get; set; }
-
-        /// <summary>
-        /// A key-value store representing the hub state on the server that has changed since the last time the hub
-        /// state was sent to the client.
-        /// </summary>
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Type is used for serialization.")]
-        [JsonProperty("S", NullValueHandling = NullValueHandling.Ignore)]
-        public IDictionary<string, object> State { get; set; }
     }
 }

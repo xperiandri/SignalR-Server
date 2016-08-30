@@ -15,7 +15,7 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
     public class HubConnectionContext : HubConnectionContextBase, IHubCallerConnectionContext<object>
     {
         private readonly string _connectionId;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="HubConnectionContext"/>.
         /// </summary>
@@ -33,14 +33,12 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
         /// <param name="connection">The connection.</param>
         /// <param name="hubName">The hub name.</param>
         /// <param name="connectionId">The connection id.</param>
-        /// <param name="tracker">The connection hub state.</param>
-        public HubConnectionContext(IHubPipelineInvoker pipelineInvoker, IConnection connection, string hubName, string connectionId, StateChangeTracker tracker)
+        public HubConnectionContext(IHubPipelineInvoker pipelineInvoker, IConnection connection, string hubName, string connectionId)
             : base(connection, pipelineInvoker, hubName)
         {
             _connectionId = connectionId;
 
-            Caller = new StatefulSignalProxy(connection, pipelineInvoker, connectionId, PrefixHelper.HubConnectionIdPrefix, hubName, tracker);
-            CallerState = new CallerStateProxy(tracker);
+            Caller = new SignalProxy(connection, pipelineInvoker, connectionId, hubName, PrefixHelper.HubConnectionIdPrefix, ListHelper<string>.Empty);
             All = AllExcept();
             Others = AllExcept(connectionId);
         }
@@ -54,12 +52,6 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
         /// Represents the calling client.
         /// </summary>
         public dynamic Caller { get; set; }
-
-        /// <summary>
-        /// Represents the calling client's state. This should be used when the state is innaccessible
-        /// via the <see cref="HubConnectionContext.Caller"/> property (such as in VB.NET or in typed Hubs).
-        /// </summary>
-        public dynamic CallerState { get; set; }
 
         /// <summary>
         /// Returns a dynamic representation of all clients in a group except the calling client.

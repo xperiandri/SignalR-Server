@@ -36,14 +36,13 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
             return new ChatHubTestClient(client, proxy);
         }
 
-        public Task SetName(string name) => Proxy.Invoke("SetName", name);
-        public Task Broadcast(string message) => Proxy.Invoke("Broadcast", message);
+        public Task Broadcast(string sender, string message) => Proxy.Invoke("Broadcast", sender, message);
         public Task<int> Add(int x, int y) => Proxy.Invoke<int>("Add", x, y);
         public Task<int> AddAsync(int x, int y) => Proxy.Invoke<int>("AddAsync", x, y);
 
         public Task JoinGroup(string name) => Proxy.Invoke("JoinGroup", name);
         public Task LeaveGroup(string name) => Proxy.Invoke("LeaveGroup", name);
-        public Task SendToGroup(string group, string message) => Proxy.Invoke("SendToGroup", group, message);
+        public Task SendToGroup(string sender, string group, string message) => Proxy.Invoke("SendToGroup", sender, group, message);
         public Task<IEnumerable<int>> CrashConnection() => Proxy.Invoke<IEnumerable<int>>("CrashConnection");
         public Task WithProgress() => Proxy.Invoke<int>(
             method: "WithProgress",

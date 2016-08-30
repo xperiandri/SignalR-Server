@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace Microsoft.AspNetCore.SignalR.Hubs
 {
-    public abstract class SignalProxy : DynamicObject, IClientProxy
+    public class SignalProxy : DynamicObject, IClientProxy
     {
         private readonly IList<string> _exclude;
 
-        protected SignalProxy(IConnection connection, IHubPipelineInvoker invoker, string signal, string hubName, string prefix, IList<string> exclude)
+        public SignalProxy(IConnection connection, IHubPipelineInvoker invoker, string signal, string hubName, string prefix, IList<string> exclude)
         {
             Connection = connection;
             Invoker = invoker;
@@ -26,12 +26,6 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
         protected IHubPipelineInvoker Invoker { get; private set; }
         protected string Signal { get; private set; }
         protected string HubName { get; private set; }
-
-        public override bool TryGetMember(GetMemberBinder binder, out object result)
-        {
-            result = null;
-            return false;
-        }
 
         [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0", Justification = "The compiler generates calls to invoke this")]
         public override bool TryInvokeMember(InvokeMemberBinder binder, object[] args, out object result)

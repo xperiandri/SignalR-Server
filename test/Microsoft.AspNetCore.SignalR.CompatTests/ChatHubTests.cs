@@ -46,37 +46,11 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
             using (var client2 = await ChatHubTestClient.Connect(_fixture.ServerInfo, transportFactory.Create()))
             using (var client3 = await ChatHubTestClient.Connect(_fixture.ServerInfo, transportFactory.Create()))
             {
-                await Task.WhenAll(client1.SetName("client1"), client2.SetName("client2"), client3.SetName("client3"));
-
-                await client1.Broadcast("Hello, World!");
+                await client1.Broadcast("client1", "Hello, World!");
 
                 AssertMessage("client1", "Hello, World!", await client1.WaitForMessage());
                 AssertMessage("client1", "Hello, World!", await client2.WaitForMessage());
                 AssertMessage("client1", "Hello, World!", await client3.WaitForMessage());
-            }
-        }
-
-        [Theory]
-        [MemberData(nameof(AllTransports))]
-        public async Task ClientState_can_be_read_by_client(ITransportFactory transportFactory)
-        {
-            // NOTE: ClientState is probably going to be removed. However it is important to test how the managed client behaves when trying
-            // to access it. When ClientState is removed, this test will likely fail and should be adjusted (not removed) to specify the expected
-            // behavior (i.e. returning null or failing to read values, or whatever)
-
-            using (var client1 = await ChatHubTestClient.Connect(_fixture.ServerInfo, transportFactory.Create()))
-            {
-                Assert.Null(client1.Proxy.GetValue<string>("Username"));
-
-                await client1.SetName("client1");
-                Assert.Equal("client1", client1.Proxy.GetValue<string>("Username"));
-
-                client1.Proxy["Username"] = "client1prime";
-
-                await client1.Broadcast("Hello, World!");
-
-                Assert.Equal("client1prime", client1.Proxy["Username"]);
-                AssertMessage("client1prime", "Hello, World!", await client1.WaitForMessage());
             }
         }
 
@@ -89,13 +63,11 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
             using (var client3 = await ChatHubTestClient.Connect(_fixture.ServerInfo, transportFactory.Create()))
             using (var client4 = await ChatHubTestClient.Connect(_fixture.ServerInfo, transportFactory.Create()))
             {
-                await Task.WhenAll(client1.SetName("client1"), client2.SetName("client2"), client3.SetName("client3"), client4.SetName("client4"));
-
                 await Task.WhenAll(client2.JoinGroup("test"), client4.JoinGroup("test"), client3.JoinGroup("test"));
 
                 await client3.LeaveGroup("test");
 
-                await client1.SendToGroup("test", "Hello, World!");
+                await client1.SendToGroup("client1", "test", "Hello, World!");
 
                 AssertMessage("client1", "Hello, World!", await client2.WaitForMessage());
                 AssertMessage("client1", "Hello, World!", await client4.WaitForMessage());
@@ -112,11 +84,11 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
             using (var client2 = await ChatHubTestClient.Connect(_fixture.ServerInfo, transportFactory.Create()))
             using (var client3 = await ChatHubTestClient.Connect(_fixture.ServerInfo, transportFactory.Create()))
             {
-                await client1.SendToGroup("onconnectedgroup", "Hello, World!");
+                await client1.SendToGroup("client1", "onconnectedgroup", "Hello, World!");
 
-                AssertMessage("unknown", "Hello, World!", await client1.WaitForMessage());
-                AssertMessage("unknown", "Hello, World!", await client2.WaitForMessage());
-                AssertMessage("unknown", "Hello, World!", await client3.WaitForMessage());
+                AssertMessage("client1", "Hello, World!", await client1.WaitForMessage());
+                AssertMessage("client1", "Hello, World!", await client2.WaitForMessage());
+                AssertMessage("client1", "Hello, World!", await client3.WaitForMessage());
             }
         }
 
@@ -143,14 +115,9 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
             using (var client2 = await ChatHubTestClient.Connect(_fixture.ServerInfo, transportFactory.Create()))
             {
                 client1.Connection.Reconnected += () => reconnectTcs.SetResult(1);
-
-                await client1.SetName("client1");
-
                 transport.LostConnection(client1.Connection);
 
-                await client2.SetName("client2");
-
-                await client2.Broadcast("Hello!");
+                await client2.Broadcast("client2", "Hello!");
 
                 Assert.Equal(1, await reconnectTcs.Task);
                 AssertMessage("client2", "Hello!", await client1.WaitForMessage());

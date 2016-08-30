@@ -25,14 +25,6 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
             }
         }
 
-        public dynamic CallerState
-        {
-            get
-            {
-                return _dynamicContext.CallerState;
-            }
-        }
-
         public TClient Others
         {
             get

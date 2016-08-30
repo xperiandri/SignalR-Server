@@ -13,8 +13,6 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
     {
         public GroupProxy(IConnection connection, IHubPipelineInvoker invoker, string signal, string hubName, IList<string> exclude) :
             base(connection, invoker, signal, hubName, PrefixHelper.HubGroupPrefix, exclude)
-        {
-
-        }
+        { }
     }
 }

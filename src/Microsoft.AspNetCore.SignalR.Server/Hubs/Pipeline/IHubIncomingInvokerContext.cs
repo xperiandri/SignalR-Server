@@ -27,10 +27,5 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Justification = "This represents an ordered list of parameter values")]
         IList<object> Args { get; }
-
-        /// <summary>
-        /// A key-value store representing the hub state on the client at the time of the invocation.
-        /// </summary>
-        StateChangeTracker StateTracker { get; }
     }
 }

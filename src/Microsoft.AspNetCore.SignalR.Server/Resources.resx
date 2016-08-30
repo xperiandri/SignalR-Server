@@ -231,9 +231,6 @@
   <data name="Error_ScaleoutQueuingConfig" xml:space="preserve">
     <value>Scaleout queuing is enabled but maximum queue size is 0</value>
   </data>
-  <data name="Error_StateExceededMaximumLength" xml:space="preserve">
-    <value>State has exceeded the maximum length of 4096 bytes.</value>
-  </data>
   <data name="Error_StreamClosed" xml:space="preserve">
     <value>The stream has been closed.</value>
   </data>

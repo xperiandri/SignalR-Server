@@ -13,8 +13,6 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
     {
         public ConnectionIdProxy(IConnection connection, IHubPipelineInvoker invoker, string signal, string hubName, params string[] exclude) :
             base(connection, invoker, signal, hubName, PrefixHelper.HubConnectionIdPrefix, exclude)
-        {
-
-        }
+        { }
     }
 }

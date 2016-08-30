@@ -14,7 +14,6 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
         where TClient : class
     {
         TClient Caller { get; }
-        dynamic CallerState { get; }
         TClient Others { get; }
         TClient OthersInGroup(string groupName);
         TClient OthersInGroups(IList<string> groupNames);

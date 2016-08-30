@@ -10,8 +10,6 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
     {
         public UserProxy(IConnection connection, IHubPipelineInvoker invoker, string signal, string hubName) :
             base(connection, invoker, signal, hubName, PrefixHelper.HubUserPrefix, ListHelper<string>.Empty)
-        {
-
-        }
+        { }
     }
 }

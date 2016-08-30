@@ -177,11 +177,9 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
                 methodDescriptor = new NullMethodDescriptor(descriptor, hubRequest.Method, availableMethods);
             }
 
-            // Resolving the actual state object
-            var tracker = new StateChangeTracker(hubRequest.State);
-            var hub = CreateHub(request, descriptor, connectionId, tracker, throwIfFailedToCreate: true);
+            var hub = CreateHub(request, descriptor, connectionId, throwIfFailedToCreate: true);
 
-            return InvokeHubPipeline(hub, parameterValues, methodDescriptor, hubRequest, tracker)
+            return InvokeHubPipeline(hub, parameterValues, methodDescriptor, hubRequest)
                 .ContinueWithPreservedCulture(task => hub.Dispose(), TaskContinuationOptions.ExecuteSynchronously);
         }
 
@@ -189,11 +187,10 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
         private Task InvokeHubPipeline(IHub hub,
                                        IJsonValue[] parameterValues,
                                        MethodDescriptor methodDescriptor,
-                                       HubRequest hubRequest,
-                                       StateChangeTracker tracker)
+                                       HubRequest hubRequest)
         {
             // TODO: Make adding parameters here pluggable? IValueProvider? ;)
-            HubInvocationProgress progress = GetProgressInstance(methodDescriptor, value => SendProgressUpdate(hub.Context.ConnectionId, tracker, value, hubRequest), Logger);
+            HubInvocationProgress progress = GetProgressInstance(methodDescriptor, value => SendProgressUpdate(hub.Context.ConnectionId, value, hubRequest), Logger);
 
             Task<object> piplineInvocation;
             try
@@ -207,7 +204,7 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
                     args = args.Concat(new[] { progress }).ToList();
                 }
 
-                var context = new HubInvokerContext(hub, tracker, methodDescriptor, args);
+                var context = new HubInvokerContext(hub, methodDescriptor, args);
 
                 // Invoke the pipeline and save the task
                 piplineInvocation = _pipelineInvoker.Invoke(context);
@@ -228,15 +225,15 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
 
                 if (task.IsFaulted)
                 {
-                    return ProcessResponse(tracker, result: null, request: hubRequest, error: task.Exception);
+                    return ProcessResponse(result: null, request: hubRequest, error: task.Exception);
                 }
                 else if (task.IsCanceled)
                 {
-                    return ProcessResponse(tracker, result: null, request: hubRequest, error: new OperationCanceledException());
+                    return ProcessResponse(result: null, request: hubRequest, error: new OperationCanceledException());
                 }
                 else
                 {
-                    return ProcessResponse(tracker, task.Result, hubRequest, error: null);
+                    return ProcessResponse(task.Result, hubRequest, error: null);
                 }
             })
             .FastUnwrap();
@@ -451,7 +448,7 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
             return tcs.Task;
         }
 
-        private IHub CreateHub(HttpRequest request, HubDescriptor descriptor, string connectionId, StateChangeTracker tracker = null, bool throwIfFailedToCreate = false)
+        private IHub CreateHub(HttpRequest request, HubDescriptor descriptor, string connectionId, bool throwIfFailedToCreate = false)
         {
             try
             {
@@ -459,10 +456,8 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
 
                 if (hub != null)
                 {
-                    tracker = tracker ?? new StateChangeTracker();
-
                     hub.Context = new HubCallerContext(request, connectionId);
-                    hub.Clients = new HubConnectionContext(_pipelineInvoker, Connection, descriptor.Name, connectionId, tracker);
+                    hub.Clients = new HubConnectionContext(_pipelineInvoker, Connection, descriptor.Name, connectionId);
                     hub.Groups = new GroupManager(Connection, PrefixHelper.GetHubGroupName(descriptor.Name));
                 }
 
@@ -497,11 +492,10 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
             }
         }
 
-        private Task SendProgressUpdate(string connectionId, StateChangeTracker tracker, object value, HubRequest request)
+        private Task SendProgressUpdate(string connectionId, object value, HubRequest request)
         {
             var hubResult = new HubResponse
             {
-                State = tracker.GetChanges(),
                 Progress = new { I = request.Id, D = value },
                 // We prefix the ID here to ensure old clients treat this as a hub response
                 // but fail to lookup a corresponding callback and thus no-op
@@ -511,11 +505,10 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
             return Connection.Send(connectionId, hubResult);
         }
 
-        private Task ProcessResponse(StateChangeTracker tracker, object result, HubRequest request, Exception error)
+        private Task ProcessResponse(object result, HubRequest request, Exception error)
         {
             var hubResult = new HubResponse
             {
-                State = tracker.GetChanges(),
                 Result = result,
                 Id = request.Id,
             };

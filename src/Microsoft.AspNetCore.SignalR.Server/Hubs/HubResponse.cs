@@ -14,13 +14,6 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
     public class HubResponse
     {
         /// <summary>
-        /// The changes made the the round tripped state.
-        /// </summary>
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Type is used for serialization")]
-        [JsonProperty("S", NullValueHandling = NullValueHandling.Ignore)]
-        public IDictionary<string, object> State { get; set; }
-
-        /// <summary>
         /// The result of the invocation.
         /// </summary>
         [JsonProperty("R", NullValueHandling = NullValueHandling.Ignore)]

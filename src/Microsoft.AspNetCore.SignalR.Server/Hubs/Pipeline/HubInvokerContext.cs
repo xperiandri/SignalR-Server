@@ -8,12 +8,11 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
 {
     internal class HubInvokerContext : IHubIncomingInvokerContext
     {
-        public HubInvokerContext(IHub hub, StateChangeTracker tracker, MethodDescriptor methodDescriptor, IList<object> args)
+        public HubInvokerContext(IHub hub, MethodDescriptor methodDescriptor, IList<object> args)
         {
             Hub = hub;
             MethodDescriptor = methodDescriptor;
             Args = args;
-            StateTracker = tracker;
         }
 
         public IHub Hub
@@ -29,13 +28,6 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
         }
 
         public IList<object> Args
-        {
-            get;
-            private set;
-        }
-
-
-        public StateChangeTracker StateTracker
         {
             get;
             private set;

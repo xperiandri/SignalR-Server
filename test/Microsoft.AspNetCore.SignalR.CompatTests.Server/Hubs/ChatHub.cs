@@ -23,11 +23,6 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests.Server
             return x + y;
         }
 
-        public void SetName(string name)
-        {
-            Clients.CallerState.Username = name;
-        }
-
         public void JoinGroup(string name)
         {
             Groups.Add(Context.ConnectionId, name);
@@ -38,18 +33,14 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests.Server
             Groups.Remove(Context.ConnectionId, name);
         }
 
-        public void Broadcast(string message)
+        public void Broadcast(string sender, string message)
         {
-            var name = Clients.CallerState.Username ?? "unknown";
-
-            Clients.All.ReceiveMessage(name, message);
+            Clients.All.ReceiveMessage(sender, message);
         }
 
-        public void SendToGroup(string group, string message)
+        public void SendToGroup(string sender, string group, string message)
         {
-            var name = Clients.CallerState.Username ?? "unknown";
-
-            Clients.Group(group).ReceiveMessage(name, message);
+            Clients.Group(group).ReceiveMessage(sender, message);
         }
 
         public IEnumerable<int> CrashConnection()
