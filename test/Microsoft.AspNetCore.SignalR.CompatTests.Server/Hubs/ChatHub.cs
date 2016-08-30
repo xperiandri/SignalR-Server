@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Microsoft.AspNetCore.SignalR.CompatTests.Server
 {
@@ -48,6 +50,22 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests.Server
             var name = Clients.CallerState.Username ?? "unknown";
 
             Clients.Group(group).ReceiveMessage(name, message);
+        }
+
+        public IEnumerable<int> CrashConnection()
+        {
+            yield return 1;
+
+            throw new Exception("KABOOM!");
+        }
+
+        public async Task WithProgress(IProgress<int> progress)
+        {
+            for(int i = 0; i < 5; i++)
+            {
+                progress.Report(i);
+                await Task.Delay(10);
+            }
         }
     }
 }

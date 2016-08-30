@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.Client;
 using Microsoft.AspNet.SignalR.Client.Transports;
@@ -124,6 +126,42 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
                 AssertMessage("unknown", "Hello, World!", await client1.WaitForMessage());
                 AssertMessage("unknown", "Hello, World!", await client2.WaitForMessage());
                 AssertMessage("unknown", "Hello, World!", await client3.WaitForMessage());
+            }
+        }
+
+        [Theory]
+        [MemberData(nameof(Transports))]
+        public async Task Can_receive_progress_messages(ITransportFactory transportFactory)
+        {
+
+            using (var client1 = await ChatHubTestClient.Connect(_fixture.ServerInfo.HubConnectionUrl, transportFactory.Create()))
+            {
+                await client1.WithProgress();
+
+                Assert.Equal(new[] { 0, 1, 2, 3, 4 }, client1.ReceivedProgress.ToArray());
+            }
+        }
+
+
+        [Fact]
+        public async Task Can_recover_from_reconnect()
+        {
+            // Our technique for forcing a reconnect only works for WebSockets right now...
+            var reconnectTcs = new TaskCompletionSource<int>();
+            bool threw = false;
+            using (var client1 = await ChatHubTestClient.Connect(_fixture.ServerInfo.HubConnectionUrl, new WebSocketTransport()))
+            using (var client2 = await ChatHubTestClient.Connect(_fixture.ServerInfo.HubConnectionUrl, new WebSocketTransport()))
+            {
+                client1.Connection.Reconnected += () => reconnectTcs.SetResult(1);
+
+                await Task.WhenAll(client1.SetName("client1"), client2.SetName("client2"));
+
+                await Task.WhenAll(client1.CrashConnection().ContinueWith(t => threw = t.IsFaulted), client2.Broadcast("hello"));
+
+                AssertMessage("client2", "hello", await client1.WaitForMessage());
+
+                Assert.Equal(1, await reconnectTcs.Task);
+                Assert.True(threw);
             }
         }
 

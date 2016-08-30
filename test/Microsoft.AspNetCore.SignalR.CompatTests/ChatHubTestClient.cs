@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.Client;
 using Microsoft.AspNet.SignalR.Client.Transports;
@@ -12,11 +13,13 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
 
         public HubConnection Connection { get; }
         public IHubProxy Proxy { get; }
+        public IList<int> ReceivedProgress { get; }
 
         public ChatHubTestClient(HubConnection connection, IHubProxy proxy)
         {
             Connection = connection;
             Proxy = proxy;
+            ReceivedProgress = new List<int>();
 
             Proxy.On("ReceiveMessage", (string from, string message) =>
             {
@@ -41,6 +44,11 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
         public Task JoinGroup(string name) => Proxy.Invoke("JoinGroup", name);
         public Task LeaveGroup(string name) => Proxy.Invoke("LeaveGroup", name);
         public Task SendToGroup(string group, string message) => Proxy.Invoke("SendToGroup", group, message);
+        public Task<IEnumerable<int>> CrashConnection() => Proxy.Invoke<IEnumerable<int>>("CrashConnection");
+        public Task WithProgress() => Proxy.Invoke<int>(
+            method: "WithProgress",
+            onProgress: OnProgress,
+            args: new object[0]);
 
         public bool HasMessage() => _receivedAMessage.Task.IsCompleted;
 
@@ -54,6 +62,11 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
         public void Dispose()
         {
             Connection.Dispose();
+        }
+
+        public void OnProgress(int value)
+        {
+            ReceivedProgress.Add(value);
         }
     }
 }
