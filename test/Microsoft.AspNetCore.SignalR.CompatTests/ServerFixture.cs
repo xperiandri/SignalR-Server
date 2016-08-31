@@ -9,6 +9,12 @@ using Xunit;
 
 namespace Microsoft.AspNetCore.SignalR.CompatTests
 {
+    [CollectionDefinition(Name)]
+    public class ServerTestsCollection : ICollectionFixture<ServerFixture>
+    {
+        public const string Name = "ServerTests";
+    }
+
     public class ServerFixture : IDisposable
     {
         private readonly bool _verbose;
@@ -41,6 +47,8 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
                 return new ServerInfo(url);
             }
 
+            Console.WriteLine("Deploying test server...");
+
             var parameters = new DeploymentParameters(
                 applicationPath: GetApplicationPath("Microsoft.AspNetCore.SignalR.CompatTests.Server"),
                 serverType: ServerType.Kestrel,
@@ -52,9 +60,10 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
             // Ensure it's working
             var client = new HttpClient();
             var logger = _loggerFactory.CreateLogger("Connection");
-            var resp = await RetryHelper.RetryRequest(() => client.GetAsync(result.ApplicationBaseUri), logger);
+            var resp = await RetryHelper.RetryRequest(() => client.GetAsync(result.ApplicationBaseUri), logger, result.HostShutdownToken);
             resp.EnsureSuccessStatusCode();
 
+            Console.WriteLine("Test server ready. Running tests...");
             return new ServerInfo(result.ApplicationBaseUri);
         }
 

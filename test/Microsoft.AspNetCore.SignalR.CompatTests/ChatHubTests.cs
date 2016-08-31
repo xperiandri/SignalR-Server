@@ -1,26 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.Client;
-using Microsoft.AspNet.SignalR.Client.Transports;
 using Xunit;
 
 namespace Microsoft.AspNetCore.SignalR.CompatTests
 {
-    public class ChatHubTests : IClassFixture<ServerFixture>
+    [Collection(ServerTestsCollection.Name)]
+    public class ChatHubTests
     {
         private readonly ServerFixture _fixture;
 
-        public static IEnumerable<object[]> Transports
-        {
-            get
-            {
-                yield return new[] { new TransportFactory<WebSocketTransport>() };
-                yield return new[] { new TransportFactory<LongPollingTransport>() };
-                yield return new[] { new TransportFactory<ServerSentEventsTransport>() };
-            }
-        }
+        public static IEnumerable<ITransportFactory[]> AllTransports => TransportFactory.All;
 
         public ChatHubTests(ServerFixture fixture)
         {
@@ -28,19 +19,19 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
         }
 
         [Theory]
-        [MemberData(nameof(Transports))]
+        [MemberData(nameof(AllTransports))]
         public async Task Can_connect_to_server(ITransportFactory transportFactory)
         {
-            using (var client = await ChatHubTestClient.Connect(_fixture.ServerInfo.HubConnectionUrl, transportFactory.Create()))
+            using (var client = await ChatHubTestClient.Connect(_fixture.ServerInfo, transportFactory.Create()))
             {
             }
         }
 
         [Theory]
-        [MemberData(nameof(Transports))]
+        [MemberData(nameof(AllTransports))]
         public async Task Can_handle_RPC(ITransportFactory transportFactory)
         {
-            using (var client = await ChatHubTestClient.Connect(_fixture.ServerInfo.HubConnectionUrl, transportFactory.Create()))
+            using (var client = await ChatHubTestClient.Connect(_fixture.ServerInfo, transportFactory.Create()))
             {
                 Assert.Equal(42, await client.Add(40, 2));
                 Assert.Equal(42, await client.AddAsync(40, 2));
@@ -48,12 +39,12 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
         }
 
         [Theory]
-        [MemberData(nameof(Transports))]
+        [MemberData(nameof(AllTransports))]
         public async Task Can_broadcast_to_clients(ITransportFactory transportFactory)
         {
-            using (var client1 = await ChatHubTestClient.Connect(_fixture.ServerInfo.HubConnectionUrl, transportFactory.Create()))
-            using (var client2 = await ChatHubTestClient.Connect(_fixture.ServerInfo.HubConnectionUrl, transportFactory.Create()))
-            using (var client3 = await ChatHubTestClient.Connect(_fixture.ServerInfo.HubConnectionUrl, transportFactory.Create()))
+            using (var client1 = await ChatHubTestClient.Connect(_fixture.ServerInfo, transportFactory.Create()))
+            using (var client2 = await ChatHubTestClient.Connect(_fixture.ServerInfo, transportFactory.Create()))
+            using (var client3 = await ChatHubTestClient.Connect(_fixture.ServerInfo, transportFactory.Create()))
             {
                 await Task.WhenAll(client1.SetName("client1"), client2.SetName("client2"), client3.SetName("client3"));
 
@@ -66,14 +57,14 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
         }
 
         [Theory]
-        [MemberData(nameof(Transports))]
+        [MemberData(nameof(AllTransports))]
         public async Task ClientState_can_be_read_by_client(ITransportFactory transportFactory)
         {
             // NOTE: ClientState is probably going to be removed. However it is important to test how the managed client behaves when trying
             // to access it. When ClientState is removed, this test will likely fail and should be adjusted (not removed) to specify the expected
             // behavior (i.e. returning null or failing to read values, or whatever)
 
-            using (var client1 = await ChatHubTestClient.Connect(_fixture.ServerInfo.HubConnectionUrl, transportFactory.Create()))
+            using (var client1 = await ChatHubTestClient.Connect(_fixture.ServerInfo, transportFactory.Create()))
             {
                 Assert.Null(client1.Proxy.GetValue<string>("Username"));
 
@@ -90,13 +81,13 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
         }
 
         [Theory]
-        [MemberData(nameof(Transports))]
+        [MemberData(nameof(AllTransports))]
         public async Task Can_broadcast_to_groups(ITransportFactory transportFactory)
         {
-            using (var client1 = await ChatHubTestClient.Connect(_fixture.ServerInfo.HubConnectionUrl, transportFactory.Create()))
-            using (var client2 = await ChatHubTestClient.Connect(_fixture.ServerInfo.HubConnectionUrl, transportFactory.Create()))
-            using (var client3 = await ChatHubTestClient.Connect(_fixture.ServerInfo.HubConnectionUrl, transportFactory.Create()))
-            using (var client4 = await ChatHubTestClient.Connect(_fixture.ServerInfo.HubConnectionUrl, transportFactory.Create()))
+            using (var client1 = await ChatHubTestClient.Connect(_fixture.ServerInfo, transportFactory.Create()))
+            using (var client2 = await ChatHubTestClient.Connect(_fixture.ServerInfo, transportFactory.Create()))
+            using (var client3 = await ChatHubTestClient.Connect(_fixture.ServerInfo, transportFactory.Create()))
+            using (var client4 = await ChatHubTestClient.Connect(_fixture.ServerInfo, transportFactory.Create()))
             {
                 await Task.WhenAll(client1.SetName("client1"), client2.SetName("client2"), client3.SetName("client3"), client4.SetName("client4"));
 
@@ -114,12 +105,12 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
         }
 
         [Theory]
-        [MemberData(nameof(Transports))]
+        [MemberData(nameof(AllTransports))]
         public async Task Can_broadcast_to_group_joined_on_connection(ITransportFactory transportFactory)
         {
-            using (var client1 = await ChatHubTestClient.Connect(_fixture.ServerInfo.HubConnectionUrl, transportFactory.Create()))
-            using (var client2 = await ChatHubTestClient.Connect(_fixture.ServerInfo.HubConnectionUrl, transportFactory.Create()))
-            using (var client3 = await ChatHubTestClient.Connect(_fixture.ServerInfo.HubConnectionUrl, transportFactory.Create()))
+            using (var client1 = await ChatHubTestClient.Connect(_fixture.ServerInfo, transportFactory.Create()))
+            using (var client2 = await ChatHubTestClient.Connect(_fixture.ServerInfo, transportFactory.Create()))
+            using (var client3 = await ChatHubTestClient.Connect(_fixture.ServerInfo, transportFactory.Create()))
             {
                 await client1.SendToGroup("onconnectedgroup", "Hello, World!");
 
@@ -130,11 +121,11 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
         }
 
         [Theory]
-        [MemberData(nameof(Transports))]
+        [MemberData(nameof(AllTransports))]
         public async Task Can_receive_progress_messages(ITransportFactory transportFactory)
         {
 
-            using (var client1 = await ChatHubTestClient.Connect(_fixture.ServerInfo.HubConnectionUrl, transportFactory.Create()))
+            using (var client1 = await ChatHubTestClient.Connect(_fixture.ServerInfo, transportFactory.Create()))
             {
                 await client1.WithProgress();
 
@@ -142,27 +133,29 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
             }
         }
 
-
-        [Fact]
-        public async Task Can_recover_from_reconnect()
+        [Theory]
+        [MemberData(nameof(AllTransports))]
+        public async Task Can_recover_from_reconnect(ITransportFactory transportFactory)
         {
-            // Our technique for forcing a reconnect only works for WebSockets right now...
             var reconnectTcs = new TaskCompletionSource<int>();
-            bool threw = false;
-            using (var client1 = await ChatHubTestClient.Connect(_fixture.ServerInfo.HubConnectionUrl, new WebSocketTransport()))
-            using (var client2 = await ChatHubTestClient.Connect(_fixture.ServerInfo.HubConnectionUrl, new WebSocketTransport()))
+            var transport = transportFactory.Create();
+            using (var client1 = await ChatHubTestClient.Connect(_fixture.ServerInfo, transport))
+            using (var client2 = await ChatHubTestClient.Connect(_fixture.ServerInfo, transportFactory.Create()))
             {
                 client1.Connection.Reconnected += () => reconnectTcs.SetResult(1);
 
-                await Task.WhenAll(client1.SetName("client1"), client2.SetName("client2"));
+                await client1.SetName("client1");
 
-                await Task.WhenAll(client1.CrashConnection().ContinueWith(t => threw = t.IsFaulted), client2.Broadcast("hello"));
+                transport.LostConnection(client1.Connection);
 
-                AssertMessage("client2", "hello", await client1.WaitForMessage());
+                await client2.SetName("client2");
+
+                await client2.Broadcast("Hello!");
 
                 Assert.Equal(1, await reconnectTcs.Task);
-                Assert.True(threw);
+                AssertMessage("client2", "Hello!", await client1.WaitForMessage());
             }
+
         }
 
         private void AssertMessage(string from, string message, ChatHubMessage msg)

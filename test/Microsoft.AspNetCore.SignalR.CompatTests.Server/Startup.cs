@@ -24,6 +24,7 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests.Server
             loggerFactory.AddConsole();
 
             app.UseWebSockets();
+            app.UseSignalR<TestConnection>("/test/raw");
             app.UseSignalR("/test/hubs");
 
             var data = Encoding.UTF8.GetBytes("Server online");

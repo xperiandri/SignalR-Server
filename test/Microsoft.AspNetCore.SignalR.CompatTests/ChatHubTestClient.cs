@@ -28,9 +28,9 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
             });
         }
 
-        public static async Task<ChatHubTestClient> Connect(string hubsUrl, IClientTransport transport)
+        public static async Task<ChatHubTestClient> Connect(ServerInfo server, IClientTransport transport)
         {
-            var client = new HubConnection(hubsUrl);
+            var client = new HubConnection(server.HubConnectionUrl);
             var proxy = client.CreateHubProxy("ChatHub");
             await client.Start(transport);
             return new ChatHubTestClient(client, proxy);
