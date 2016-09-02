@@ -9,7 +9,7 @@
         public ServerInfo(string applicationBaseUri)
         {
             ApplicationBaseUri = applicationBaseUri;
-            if(ApplicationBaseUri.EndsWith("/"))
+            if (ApplicationBaseUri.EndsWith("/"))
             {
                 ApplicationBaseUri = ApplicationBaseUri.Substring(0, ApplicationBaseUri.Length - 1);
             }

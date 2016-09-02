@@ -1,19 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNet.SignalR.Client;
 using Xunit;
 
 namespace Microsoft.AspNetCore.SignalR.CompatTests
 {
-    [Collection(ServerTestsCollection.Name)]
+    [Collection(CompatTestsCollection.Name)]
     public class ChatHubTests
     {
-        private readonly ServerFixture _fixture;
+        private readonly CompatTestsServerFixture _fixture;
 
         public static IEnumerable<ITransportFactory[]> AllTransports => TransportFactory.All;
 
-        public ChatHubTests(ServerFixture fixture)
+        public ChatHubTests(CompatTestsServerFixture fixture)
         {
             _fixture = fixture;
         }
