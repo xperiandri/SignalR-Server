@@ -1,17 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR.Tests;
 using Xunit;
 
 namespace Microsoft.AspNetCore.SignalR.CompatTests
 {
-    [Collection(ServerTestsCollection.Name)]
+    [Collection(CompatTestsCollection.Name)]
     public class PersistentConnectionTests
     {
-        private readonly ServerFixture _fixture;
+        private readonly CompatTestsServerFixture _fixture;
 
         public static IEnumerable<ITransportFactory[]> AllTransports => TransportFactory.All;
 
-        public PersistentConnectionTests(ServerFixture fixture)
+        public PersistentConnectionTests(CompatTestsServerFixture fixture)
         {
             _fixture = fixture;
         }

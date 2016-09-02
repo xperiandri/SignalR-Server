@@ -1,9 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Xunit;
-using Microsoft.AspNetCore.SignalR.Infrastructure;
 
 namespace Microsoft.AspNetCore.SignalR.Tests
 {
@@ -11,12 +7,12 @@ namespace Microsoft.AspNetCore.SignalR.Tests
     {
         public static void AssertAggregateException(Action action, string message)
         {
-            TestUtilities.AssertUnwrappedMessage<AggregateException>(action, message);
+            AssertUnwrappedMessage<AggregateException>(action, message);
         }
 
         public static void AssertAggregateException<T>(Action action, string message)
         {
-            TestUtilities.AssertUnwrappedException<AggregateException>(action, message, typeof(T));
+            AssertUnwrappedException<AggregateException>(action, message, typeof(T));
         }
 
         public static void AssertUnwrappedMessage<T>(Action action, string message) where T : Exception
@@ -27,7 +23,7 @@ namespace Microsoft.AspNetCore.SignalR.Tests
             }
             catch (T ex)
             {
-                Assert.Equal(ex.Unwrap().Message, message);
+                Assert.Equal(Unwrap(ex)?.Message, message);
             }
         }
 
@@ -39,7 +35,7 @@ namespace Microsoft.AspNetCore.SignalR.Tests
             }
             catch (T ex)
             {
-                Exception unwrappedException = ex.Unwrap();
+                Exception unwrappedException = Unwrap(ex);
 
                 Assert.IsType(expectedExceptionType, unwrappedException);
                 Assert.Equal(message, unwrappedException.Message);
@@ -54,10 +50,28 @@ namespace Microsoft.AspNetCore.SignalR.Tests
             }
             catch (Exception ex)
             {
-                Exception unwrappedException = ex.Unwrap();
+                Exception unwrappedException = Unwrap(ex);
 
                 Assert.IsType(typeof(T), unwrappedException);
             }
+        }
+
+        private static Exception Unwrap(Exception ex)
+        {
+            if (ex == null)
+            {
+                return null;
+            }
+
+            var next = ex.GetBaseException();
+            while (next.InnerException != null)
+            {
+                // On mono GetBaseException() doesn't seem to do anything
+                // so just walk the inner exception chain.
+                next = next.InnerException;
+            }
+
+            return next;
         }
     }
 }

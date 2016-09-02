@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.Client;
 using Microsoft.AspNet.SignalR.Client.Transports;
+using Microsoft.AspNetCore.SignalR.Tests;
 using Newtonsoft.Json;
 using Xunit;
 

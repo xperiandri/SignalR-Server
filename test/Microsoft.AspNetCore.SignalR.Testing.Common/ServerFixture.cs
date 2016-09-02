@@ -1,56 +1,53 @@
 ﻿using System;
 using System.IO;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Server.IntegrationTesting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.PlatformAbstractions;
 using Xunit;
 
-namespace Microsoft.AspNetCore.SignalR.CompatTests
+namespace Microsoft.AspNetCore.SignalR.Tests
 {
-    [CollectionDefinition(Name)]
-    public class ServerTestsCollection : ICollectionFixture<ServerFixture>
-    {
-        public const string Name = "ServerTests";
-    }
-
-    public class ServerFixture : IDisposable
+    public abstract class ServerFixture : IDisposable
     {
         private readonly bool _verbose;
 
-        private Lazy<ServerInfo> _info;
+        private Lazy<string> _baseUrl;
         private object _lock = new object();
         private ILoggerFactory _loggerFactory;
         private IApplicationDeployer _deployer;
 
-        public ServerInfo ServerInfo => _info.Value;
+        public string BaseUrl => _baseUrl.Value;
+
+        protected abstract string ServerProjectName { get; }
 
         public ServerFixture()
         {
             _loggerFactory = new LoggerFactory();
 
-            _verbose = string.Equals(Environment.GetEnvironmentVariable("SIGNALR_COMPAT_TESTS_VERBOSE"), "1");
+            _verbose = string.Equals(Environment.GetEnvironmentVariable("SIGNALR_TESTS_VERBOSE"), "1");
             if (_verbose)
             {
                 _loggerFactory.AddConsole();
             }
 
-            _info = new Lazy<ServerInfo>(() => Deploy().Result);
+            _baseUrl = new Lazy<string>(() => Deploy().Result);
         }
 
-        private async Task<ServerInfo> Deploy()
+        private async Task<string> Deploy()
         {
-            var url = Environment.GetEnvironmentVariable("SIGNALR_COMPAT_TESTS_URL");
+            var url = Environment.GetEnvironmentVariable("SIGNALR_TESTS_URL");
             if (!string.IsNullOrEmpty(url))
             {
-                return new ServerInfo(url);
+                return url;
             }
 
             Console.WriteLine("Deploying test server...");
 
             var parameters = new DeploymentParameters(
-                applicationPath: GetApplicationPath("Microsoft.AspNetCore.SignalR.CompatTests.Server"),
+                applicationPath: GetApplicationPath(ServerProjectName),
                 serverType: ServerType.Kestrel,
                 runtimeFlavor: RuntimeFlavor.CoreClr,
                 runtimeArchitecture: RuntimeArchitecture.x64);
@@ -64,7 +61,7 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
             resp.EnsureSuccessStatusCode();
 
             Console.WriteLine("Test server ready. Running tests...");
-            return new ServerInfo(result.ApplicationBaseUri);
+            return result.ApplicationBaseUri;
         }
 
         private static string GetApplicationPath(string projectName)

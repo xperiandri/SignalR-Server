@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.Client;
 using Microsoft.AspNet.SignalR.Client.Transports;
+using Microsoft.AspNetCore.SignalR.Tests;
 using Xunit;
 
 namespace Microsoft.AspNetCore.SignalR.CompatTests
