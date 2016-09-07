@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿#if NET451
+
+using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.Client;
 using Microsoft.AspNetCore.SignalR.Tests;
 using Xunit;
@@ -27,3 +29,5 @@ namespace Microsoft.AspNetCore.SignalR.FunctionalTests
         }
     }
 }
+
+#endif
