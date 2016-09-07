@@ -1,0 +1,20 @@
+var VERSION='0.1'
+var FULL_VERSION='0.1'
+var AUTHORS='Microsoft'
+
+use-standard-lifecycle
+k-standard-goals
+custom-goals
+
+default nodeDirectory = '${Path.Combine(Directory.GetCurrentDirectory(), "bin", "nodejs")}'
+var phantomjsLibrary = '${ Path.Combine(nodeDirectory, "node_modules", "phantomjs", "bin", "phantomjs") }'
+var phantomjsInstalled = '${ File.Exists(phantomjsLibrary) }'
+var phantomjsGloballyInstalled =  '${!phantomjsInstalled && TestCommand("phantomjs", "--version") }'
+
+#initialize
+var phantomjsInstallCommand = 'install ${E("KOREBUILD_NPM_INSTALL_OPTIONS")} --prefix "${nodeDirectory}" phantomjs'
+npm npmCommand='${phantomjsInstallCommand}' if='!(phantomjsInstalled || phantomjsGloballyInstalled)'
+
+#js-test target="xunit-test"
+var phantomjsCommand = '${phantomjsGloballyInstalled ? "phantomjs.cmd" : Path.Combine(nodeDirectory, "phantomjs.cmd")}'
+exec program='${phantomjsCommand}' commandline='.\test\Microsoft.AspNetCore.SignalR.FunctionalTests.Server\run-jasmine.js http://localhost:5000/tests.html'

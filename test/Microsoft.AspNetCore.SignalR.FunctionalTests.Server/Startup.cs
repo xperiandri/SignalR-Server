@@ -22,6 +22,7 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests.Server
 
             app.UseWebSockets();
             app.UseSignalR();
+            app.UseStaticFiles();
 
             var data = Encoding.UTF8.GetBytes("Server online");
             app.Use(async (context, next) =>
