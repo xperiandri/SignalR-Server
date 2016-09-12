@@ -70,8 +70,8 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
 
                 AssertMessage("client1", "Hello, World!", await client2.WaitForMessage());
                 AssertMessage("client1", "Hello, World!", await client4.WaitForMessage());
-                Assert.False(client1.HasMessage());
-                Assert.False(client3.HasMessage());
+                AssertNoMessage(client1);
+                AssertNoMessage(client3);
             }
         }
 
@@ -128,6 +128,15 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
         {
             Assert.Equal(from, msg.From);
             Assert.Equal(message, msg.Message);
+        }
+
+        private void AssertNoMessage(ChatHubTestClient client)
+        {
+            if (client.HasMessage())
+            {
+                var message = client.WaitForMessage().Result;
+                Assert.False(true, $"Expected the client to not have received any message, but instead it has received a message from '{message.From}' containing '{message.Message}'");
+            }
         }
     }
 }

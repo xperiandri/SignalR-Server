@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Tests;
 using Xunit;
@@ -59,8 +60,8 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
 
                 AssertMessage(client1.Connection.ConnectionId, "Hello, World!", await client2.WaitForMessage());
                 AssertMessage(client1.Connection.ConnectionId, "Hello, World!", await client4.WaitForMessage());
-                Assert.False(client1.HasMessage());
-                Assert.False(client3.HasMessage());
+                AssertNoMessage(client1);
+                AssertNoMessage(client3);
             }
         }
 
@@ -106,6 +107,15 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
             Assert.Equal(MessageType.Message, message.Type);
             Assert.Equal(from, message.SourceOrDest);
             Assert.Equal(value, message.Value);
+        }
+
+        private void AssertNoMessage(TestConnectionClient client)
+        {
+            if (client.HasMessage())
+            {
+                var message = client.WaitForMessage().Result;
+                Assert.False(true, $"Expected the client to not have received any message, but instead it has received a '{message.Type}' message containing '{message.Value}' from '{message.SourceOrDest}'");
+            }
         }
     }
 }
