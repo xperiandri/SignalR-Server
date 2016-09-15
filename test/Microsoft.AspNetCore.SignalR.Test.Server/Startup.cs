@@ -27,6 +27,13 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests.Server
             app.UseSignalR<TestConnection>("/test/raw");
             app.UseSignalR("/test/hubs");
             app.UseFileServer();
+
+            // TODO: needed?
+            var data = Encoding.UTF8.GetBytes("Server online");
+            app.Use(async (context, next) =>
+            {
+                await context.Response.Body.WriteAsync(data, 0, data.Length);
+            });
         }
     }
 }

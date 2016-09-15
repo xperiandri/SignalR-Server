@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR.Tests;
 using Xunit;
 
 namespace Microsoft.AspNetCore.SignalR.CompatTests

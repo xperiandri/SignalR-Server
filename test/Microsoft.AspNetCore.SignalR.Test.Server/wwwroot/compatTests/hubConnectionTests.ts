@@ -32,6 +32,7 @@
         };
     }
 
+/*
     eachTransport(transport => {
         describe(`over the ${transport.name} transport`, () => {
             it('can connect to server', done => {
@@ -175,4 +176,5 @@
             });
         });
     });
+    */
 });

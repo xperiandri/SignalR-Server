@@ -58,7 +58,7 @@
                     done();
                 });
             });
-
+            /*
             it('can have two connections', done => {
                 var client1 = createConnection(transport);
                 var client2 = createConnection(transport);
@@ -155,7 +155,7 @@
                     client2.connection.stop();
                     done();
                 });
-            });
+            }); */
         });
     });
 });

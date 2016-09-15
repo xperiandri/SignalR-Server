@@ -12,10 +12,6 @@
     "del": "^2.2.2",
     "gulp": "^3.9.1",
     "gulp-typescript": "^2.13.6",
-    "gulp-typings": "^2.0.4",
-    "jasmine": "^2.5.0",
-    "jasmine-core": "^2.5.0",
-    "jquery": "^3.1.0",
-    "signalr": "^2.2.1"
+    "gulp-typings": "^2.0.4"
   }
 }
