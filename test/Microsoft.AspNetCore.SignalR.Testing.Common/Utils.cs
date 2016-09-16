@@ -45,7 +45,8 @@ namespace Microsoft.AspNetCore.SignalR.Testing.Common
 
         public static bool IsWindows { get; }
 
-        public static int RunPhantomJS(string testUrl, out string stdOut, out string stdErr)
+        public static int RunPhantomJS(string testUrl, DataReceivedEventHandler stdOutDataReceived,
+            DataReceivedEventHandler stdErrDataReceived)
         {
             var solutionDir = GetSolutionDir();
             var isLocalInstall = Directory.Exists(
@@ -69,10 +70,12 @@ namespace Microsoft.AspNetCore.SignalR.Testing.Common
             var jasmineRunnerPath = Path.GetFullPath(
                 Path.Combine(solutionDir, "test/Microsoft.AspNetCore.SignalR.Testing.Common/run-jasmine2.js"));
 
-            return RunProgram($"{phantomJSCommand}", $"\"{jasmineRunnerPath}\" {testUrl}", out stdOut, out stdErr);
+            return RunProgram($"{phantomJSCommand}", $"\"{jasmineRunnerPath}\" {testUrl}",
+                stdOutDataReceived, stdErrDataReceived);
         }
 
-        private static int RunProgram(string name, string args, out string stdOut, out string stdErr)
+        private static int RunProgram(string name, string args, DataReceivedEventHandler stdOutDataReceived,
+            DataReceivedEventHandler stdErrDataReceived)
         {
             var processStartInfo = new ProcessStartInfo
             {
@@ -83,15 +86,18 @@ namespace Microsoft.AspNetCore.SignalR.Testing.Common
                 UseShellExecute = false
             };
 
-            stdErr = stdOut = "";
-
             try
             {
-                var process = Process.Start(processStartInfo);
-                process.WaitForExit();
-                stdOut = process.StandardOutput.ReadToEnd();
-                stdErr = process.StandardError.ReadToEnd();
-                return process.ExitCode;
+                using (var process = new Process { StartInfo = processStartInfo })
+                {
+                    process.OutputDataReceived += stdOutDataReceived;
+                    process.ErrorDataReceived += stdErrDataReceived;
+                    process.Start();
+                    process.BeginErrorReadLine();
+                    process.BeginOutputReadLine();
+                    process.WaitForExit();
+                    return process.ExitCode;
+                }
             }
             catch
             {
