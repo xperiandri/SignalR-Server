@@ -1,1 +1,5 @@
 wwwroot/js
+typings/
+
+# Anti-VS measure (VS compiles *.ts files and places *.js files next to *.ts files)
+wwwroot/compatTests/*.js

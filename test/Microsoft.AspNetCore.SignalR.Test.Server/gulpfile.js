@@ -3,12 +3,10 @@ const ts = require('gulp-typescript');
 const del = require('del');
 const gulpTypings = require('gulp-typings');
 
-/*
 gulp.task('prepare:typings', function () {
     return gulp.src('./typings.json')
         .pipe(gulpTypings());
 });
-*/
 
 gulp.task('prepare:clean-output', function () {
     return del([
@@ -16,13 +14,13 @@ gulp.task('prepare:clean-output', function () {
     ]);
 });
 
-gulp.task('prepare', ['prepare:clean-output' /*, 'prepare:typings' */]);
+gulp.task('prepare', ['prepare:clean-output', 'prepare:typings']);
 
 gulp.task('compile:typescript', ['prepare'], function () {
     gulp.src(['wwwroot/compatTests/*.ts', 'typings/**/*.d.ts'])
         .pipe(ts({
             out: 'compatTests.js',
-            noEmitOnError: false,
+            noEmitOnError: true,
             target: "ES5"
         }))
         .pipe(gulp.dest('wwwroot/js'));

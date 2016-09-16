@@ -89,6 +89,6 @@ page.open(system.args[1], function(status){
                 }
             });
             phantom.exit(exitCode);
-        });
+        }, /* TODO: fix the code to detect changes to the page instead of using arbitrary timeouts */ 100000);
     }
 });
