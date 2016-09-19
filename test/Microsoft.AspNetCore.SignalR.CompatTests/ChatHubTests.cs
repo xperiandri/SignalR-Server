@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿#if NET451
+
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -140,3 +142,5 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
         }
     }
 }
+
+#endif

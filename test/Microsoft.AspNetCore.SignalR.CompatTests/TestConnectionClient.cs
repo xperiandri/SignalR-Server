@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if NET451
+
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.Client;
 using Microsoft.AspNet.SignalR.Client.Transports;
@@ -71,3 +73,5 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
         }
     }
 }
+
+#endif

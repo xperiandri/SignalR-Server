@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if NET451
+
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Microsoft.AspNet.SignalR.Client.Http;
@@ -6,7 +8,7 @@ using Microsoft.AspNet.SignalR.Client.Transports;
 
 namespace Microsoft.AspNetCore.SignalR.CompatTests
 {
-    // Really just here so that it can be used in xunit Theories and have a good "ToString" (Func<T> does not :( have a good ToString...) 
+    // Really just here so that it can be used in xunit Theories and have a good "ToString" (Func<T> does not :( have a good ToString...)
 
     public interface ITransportFactory
     {
@@ -55,3 +57,5 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
         public override int GetHashCode() => typeof(T).GetHashCode();
     }
 }
+
+#endif
