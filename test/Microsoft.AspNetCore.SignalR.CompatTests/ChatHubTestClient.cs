@@ -2,6 +2,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.Client;
 using Microsoft.AspNet.SignalR.Client.Transports;
@@ -13,14 +15,20 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
     {
         private TaskCompletionSource<ChatHubMessage> _receivedAMessage = new TaskCompletionSource<ChatHubMessage>();
 
+        private readonly StringBuilder _traceStringBuilder;
+
         public HubConnection Connection { get; }
         public IHubProxy Proxy { get; }
         public IList<int> ReceivedProgress { get; }
 
-        public ChatHubTestClient(HubConnection connection, IHubProxy proxy)
+        public string Trace { get { return _traceStringBuilder.ToString(); } }
+
+        public ChatHubTestClient(HubConnection connection, IHubProxy proxy, StringBuilder traceStringBuilder)
         {
             Connection = connection;
             Proxy = proxy;
+            _traceStringBuilder = traceStringBuilder;
+
             ReceivedProgress = new List<int>();
 
             Proxy.On("ReceiveMessage", (string from, string message) =>
@@ -33,9 +41,14 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
         public static async Task<ChatHubTestClient> Connect(ServerInfo server, IClientTransport transport)
         {
             var client = new HubConnection(server.HubConnectionUrl);
+
+            var traceStringBuilder = new StringBuilder();
+            client.TraceWriter = new StringWriter(traceStringBuilder);
+            client.TraceLevel = TraceLevels.All;
+
             var proxy = client.CreateHubProxy("ChatHub");
             await client.Start(transport);
-            return new ChatHubTestClient(client, proxy);
+            return new ChatHubTestClient(client, proxy, traceStringBuilder);
         }
 
         public Task Broadcast(string sender, string message) => Proxy.Invoke("Broadcast", sender, message);
@@ -56,7 +69,7 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
         public async Task<ChatHubMessage> WaitForMessage(int timeoutInMilliseconds = 5000)
         {
             var completed = await Task.WhenAny(Task.Delay(timeoutInMilliseconds), _receivedAMessage.Task);
-            Assert.True(completed == _receivedAMessage.Task, "Receive timed out!");
+            Assert.True(completed == _receivedAMessage.Task, "Receive timed out!" + Environment.NewLine + Trace);
             return _receivedAMessage.Task.Result;
         }
 

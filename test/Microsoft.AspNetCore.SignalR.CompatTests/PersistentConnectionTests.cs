@@ -43,7 +43,7 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
             }
         }
 
-        [Theory(Skip = "Investigate flakiness")]
+        [Theory]
         [MemberData(nameof(AllTransports))]
         public async Task Can_broadcast_to_groups(ITransportFactory transportFactory)
         {

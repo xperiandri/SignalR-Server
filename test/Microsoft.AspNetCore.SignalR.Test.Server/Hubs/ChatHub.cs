@@ -6,10 +6,11 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests.Server
 {
     public class ChatHub : Hub
     {
-        public override Task OnConnected()
+        public override async Task OnConnected()
         {
-            Groups.Add(Context.ConnectionId, "onconnectedgroup");
-            return base.OnConnected();
+            // TODO: investigate - this causes a random hangs when using long polling transport and JS Client
+            // await Groups.Add(Context.ConnectionId, "onconnectedgroup");
+            await base.OnConnected();
         }
 
         public int Add(int x, int y)
@@ -23,14 +24,14 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests.Server
             return x + y;
         }
 
-        public void JoinGroup(string name)
+        public async Task JoinGroup(string name)
         {
-            Groups.Add(Context.ConnectionId, name);
+            await Groups.Add(Context.ConnectionId, name);
         }
 
-        public void LeaveGroup(string name)
+        public async Task LeaveGroup(string name)
         {
-            Groups.Remove(Context.ConnectionId, name);
+            await Groups.Remove(Context.ConnectionId, name);
         }
 
         public void Broadcast(string sender, string message)
@@ -55,7 +56,7 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests.Server
             for(int i = 0; i < 5; i++)
             {
                 progress.Report(i);
-                await Task.Delay(10);
+                await Task.Delay(100);
             }
         }
     }

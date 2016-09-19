@@ -21,9 +21,11 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests.Server
             {
                 case MessageType.JoinGroup:
                     await Groups.Add(connectionId, message.Value);
+                    await Connection.Send(connectionId, $"+{message.Value}");
                     break;
                 case MessageType.LeaveGroup:
                     await Groups.Remove(connectionId, message.Value);
+                    await Connection.Send(connectionId, $"-{message.Value}");
                     break;
                 case MessageType.Broadcast:
                     await Connection.Broadcast(new Message

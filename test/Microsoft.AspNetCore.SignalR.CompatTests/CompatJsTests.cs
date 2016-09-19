@@ -19,7 +19,7 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
         public void Run_javascript_compat_tests()
         {
             var exitCode =
-                Utils.RunPhantomJS(_serverFixture.BaseUrl + "compatTests.html",
+                Utils.RunPhantomJS(_serverFixture.BaseUrl + "compatTests.html?",
                 (s, e) => Console.WriteLine(e.Data), (s, e) => Console.WriteLine(e.Data));
             Assert.Equal(0, exitCode);
         }

@@ -55,7 +55,7 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
             }
         }
 
-        [Theory(Skip = "Investigate flakiness")]
+        [Theory]
         [MemberData(nameof(AllTransports))]
         public async Task Can_broadcast_to_groups(ITransportFactory transportFactory)
         {
@@ -77,7 +77,8 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
             }
         }
 
-        [Theory]
+
+        [Theory(Skip="AddToGroup in OnConnected hangs randomly when using longPolling transport and JS")]
         [MemberData(nameof(AllTransports))]
         public async Task Can_broadcast_to_group_joined_on_connection(ITransportFactory transportFactory)
         {
@@ -97,7 +98,6 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
         [MemberData(nameof(AllTransports))]
         public async Task Can_receive_progress_messages(ITransportFactory transportFactory)
         {
-
             using (var client1 = await ChatHubTestClient.Connect(_fixture.ServerInfo, transportFactory.Create()))
             {
                 await client1.WithProgress();
