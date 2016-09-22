@@ -16,7 +16,7 @@ namespace Microsoft.AspNetCore.SignalR.Transports
         /// <param name="context">The <see cref="HttpContext"/> for the current request.</param>
         /// <returns>The <see cref="ITransport"/> for the specified <see cref="HttpContext"/>.</returns>
         ITransport GetTransport(HttpContext context);
-        
+
         /// <summary>
         /// Determines whether the specified transport is supported.
         /// </summary>

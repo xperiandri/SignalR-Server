@@ -1,7 +1,6 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -27,7 +26,11 @@ namespace Microsoft.AspNetCore.SignalR
     /// </summary>
     public abstract class PersistentConnection
     {
+        // TODO: move to a separate Constants class?
         private const string WebSocketsTransportName = "webSockets";
+        private const string ServerSentEventsTransportName = "serverSentEvents";
+        private const string LongPollingTransportName = "longPolling";
+
         private const string PingJsonPayload = "{ \"Response\": \"pong\" }";
         private const string StartJsonPayload = "{ \"Response\": \"started\" }";
         private static readonly char[] SplitChars = new[] { ':' };
@@ -480,10 +483,11 @@ namespace Microsoft.AspNetCore.SignalR
         {
             // Total amount of time without a keep alive before the client should attempt to reconnect in seconds.
             var keepAliveTimeout = _options.Transports.KeepAliveTimeout();
-            string connectionId = Guid.NewGuid().ToString("d");
-            string connectionToken = connectionId + ':' + GetUserIdentity(context);
+            var connectionId = Guid.NewGuid().ToString("d");
+            var connectionToken = connectionId + ':' + GetUserIdentity(context);
+            var clientProtocol = context.Request.GetClientProtocol();
 
-            var payload = new
+            var payload = new NegotiateResponsePayload
             {
                 Url = context.Request.LocalPath().Replace("/negotiate", ""),
                 ConnectionToken = ProtectedData.Protect(connectionToken, Purposes.ConnectionToken),
@@ -491,14 +495,48 @@ namespace Microsoft.AspNetCore.SignalR
                 KeepAliveTimeout = keepAliveTimeout != null ? keepAliveTimeout.Value.TotalSeconds : (double?)null,
                 DisconnectTimeout = _options.Transports.DisconnectTimeout.TotalSeconds,
                 ConnectionTimeout = _options.Transports.LongPolling.PollTimeout.TotalSeconds,
-                // TODO: Supports websockets
-                TryWebSockets = _transportManager.SupportsTransport(WebSocketsTransportName) && context.Features.Get<IHttpWebSocketFeature>() != null,
-                ProtocolVersion = _protocolResolver.Resolve(context.Request.GetClientProtocol()).ToString(),
+                ProtocolVersion = _protocolResolver.Resolve(clientProtocol).ToString(),
                 TransportConnectTimeout = _options.Transports.TransportConnectTimeout.TotalSeconds,
                 LongPollDelay = _options.Transports.LongPolling.PollDelay.TotalSeconds
             };
 
+            if (_protocolResolver.IsClientProtocolEqualOrNewer(clientProtocol, ProtocolResolver.ProtocolVersion_1_6))
+            {
+                payload.Transports = GetSupportedTransports(context);
+            }
+            else
+            {
+                payload.TryWebSockets = WebSocketsTransportSupported(context);
+            }
+
             return SendJsonResponse(context, JsonSerializer.Stringify(payload));
+        }
+
+        private List<string> GetSupportedTransports(HttpContext context)
+        {
+            var transports = new List<string>();
+            if (WebSocketsTransportSupported(context))
+            {
+                transports.Add(WebSocketsTransportName);
+            }
+
+            if (_transportManager.SupportsTransport(ServerSentEventsTransportName))
+            {
+                transports.Add(ServerSentEventsTransportName);
+            }
+
+            if (_transportManager.SupportsTransport(LongPollingTransportName))
+            {
+                transports.Add(LongPollingTransportName);
+            }
+
+            return transports;
+        }
+
+        private bool WebSocketsTransportSupported(HttpContext context)
+        {
+            return _transportManager.SupportsTransport(WebSocketsTransportName) &&
+                context.Features.Get<IHttpWebSocketFeature>() != null;
         }
 
         private async Task ProcessStartRequest(HttpContext context, string connectionId)

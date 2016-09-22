@@ -1,14 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.SignalR.Infrastructure;
 using Microsoft.AspNetCore.SignalR.Transports;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Moq.Protected;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Microsoft.AspNetCore.SignalR.Tests
@@ -301,6 +305,71 @@ namespace Microsoft.AspNetCore.SignalR.Tests
 
                 Assert.Equal(true, connection.Object.TryGetConnectionId(context.MockHttpContext.Object, connectionId + ":::11:::::::1:1", out cid, out message, out statusCode));
                 Assert.Equal(connectionId, cid);
+            }
+
+            [Fact]
+            public async Task Negotiate_returns_supported_transports_as_array_for_client_protocol_1_6()
+            {
+                var qs = new Dictionary<string, string> { { "clientProtocol", "1.6" } };
+                var sp = ServiceProviderHelper.CreateServiceProvider();
+                var context = new TestContext("/negotiate", qs);
+
+                var connection = new Mock<PersistentConnection> { CallBase = true }.Object;
+                connection.Initialize(sp);
+                await connection.ProcessRequest(context.MockHttpContext.Object);
+
+                Assert.NotEmpty(context.ResponseBuffer);
+                var negotiateJson = JObject.Parse(context.ResponseBuffer[0]);
+                Assert.IsType(typeof(JArray), negotiateJson["Transports"]);
+                Assert.Null(negotiateJson["TryWebSockets"]);
+            }
+
+            [Fact]
+            public async Task Negotiate_does_not_include_excluded_transports()
+            {
+                var qs = new Dictionary<string, string> { { "clientProtocol", "1.6" } };
+                var context = new TestContext("/negotiate", qs);
+                context.MockHttpContext.Setup(m => m.Features.Get<IHttpWebSocketFeature>())
+                    .Returns(Mock.Of<IHttpWebSocketFeature>());
+
+                var mockTransportManager = new Mock<ITransportManager>();
+
+                mockTransportManager
+                    .Setup(m => m.SupportsTransport(It.IsIn(new[] { "webSockets", "longPolling" })))
+                    .Returns(true);
+
+                var sp = ServiceProviderHelper.CreateServiceProvider(services =>
+                {
+                    services.AddSingleton(mockTransportManager.Object);
+                });
+
+                var connection = new Mock<PersistentConnection> { CallBase = true }.Object;
+                connection.Initialize(sp);
+                await connection.ProcessRequest(context.MockHttpContext.Object);
+
+                Assert.NotEmpty(context.ResponseBuffer);
+                var negotiateJson = JObject.Parse(context.ResponseBuffer[0]);
+                Assert.Equal(
+                    new[] { "webSockets", "longPolling" },
+                    negotiateJson["Transports"].Select(i => (string)i));
+            }
+
+            [Fact]
+            public async Task Negotiate_does_not_return_supported_transports_for_client_protocol_1_5()
+            {
+                var qs = new Dictionary<string, string> { { "clientProtocol", "1.5" } };
+                var sp = ServiceProviderHelper.CreateServiceProvider();
+                var context = new TestContext("/negotiate", qs);
+
+                var connection = new Mock<PersistentConnection> { CallBase = true }.Object;
+                connection.Initialize(sp);
+                await connection.ProcessRequest(context.MockHttpContext.Object);
+
+                Assert.NotEmpty(context.ResponseBuffer);
+                var negotiateJson = JObject.Parse(context.ResponseBuffer[0]);
+                Assert.NotNull(negotiateJson["TryWebSockets"]);
+                Assert.False((bool)negotiateJson["TryWebSockets"]);
+                Assert.Null(negotiateJson["Transports"]);
             }
         }
     }

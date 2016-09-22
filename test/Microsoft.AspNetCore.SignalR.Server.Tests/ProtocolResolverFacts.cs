@@ -15,37 +15,42 @@ namespace Microsoft.AspNetCore.SignalR.Tests
         [InlineData("1.0", "1.1", "1.0.5", "1.0.5")]
         [InlineData("1.0", "1.1", "", "1.0")]
         [InlineData("1.0", "1.1", null, "1.0")]
-        public void Protocol_resolves_correctly(string minProtocol, string maxProtocol, string clientProtocol, string expectedProtocol)
+        public void Protocol_resolves_correctly(string minProtocol, string maxProtocol, string clientProtocol, string expectedProtocolVersion)
         {
             var minProtocolVersion = new Version(minProtocol);
             var maxProtocolVersion = new Version(maxProtocol);
             var protocolResolver = new ProtocolResolver(minProtocolVersion, maxProtocolVersion);
 
-            var version = protocolResolver.Resolve(clientProtocol);
-            Assert.Equal(new Version(expectedProtocol), version);
+            var reolvedVersion = protocolResolver.Resolve(clientProtocol);
+            Assert.Equal(new Version(expectedProtocolVersion), reolvedVersion);
         }
 
         [Fact]
         public void Default_MinProtocolVersion_is_1_2()
         {
-            Assert.Equal(new Version(1, 2), protocolResolver.Resolve(null));
+            var resolvedVersion = new ProtocolResolver().Resolve(null);
+            Assert.Equal(new Version(1, 2), resolvedVersion);
         }
 
         [Fact]
         public void Default_MaxProtocolVersion_is_1_6()
         {
-            Assert.Equal(new Version(1, 6), protocolResolver.Resolve($"{int.MaxValue}.{int.MaxValue}"));
+            var resolvedVersion = new ProtocolResolver().Resolve($"{int.MaxValue}.{int.MaxValue}");
+            Assert.Equal(new Version(1, 6), resolvedVersion);
         }
 
         [Theory]
-        [InlineData("1.2", false)]
-        [InlineData("1.3", false)]
-        [InlineData("1.4", true)]
-        [InlineData("1.5", true)]
-        [InlineData("1.6", true)]
-        public void Delayed_start_supported_in_1_4_and_above(string clientProtocol, bool expectedSupportsDelayedStart)
+        [InlineData("1.2")]
+        [InlineData("1.3")]
+        [InlineData("1.4")]
+        [InlineData("1.5")]
+        [InlineData("1.6")]
+        [InlineData("1.7")]
+        public void IsClientProtocolEqualOrNewer_returns_correct_value(string clientProtocol)
         {
-            Assert.Equal(expectedSupportsDelayedStart, protocolResolver.SupportsDelayedStart(clientProtocol));
+            var equalOrNewerThan1_4 = string.CompareOrdinal(clientProtocol, "1.4") >= 0;
+            Assert.Equal(equalOrNewerThan1_4,
+                new ProtocolResolver().IsClientProtocolEqualOrNewer(clientProtocol, ProtocolResolver.ProtocolVersion_1_4));
         }
     }
 }

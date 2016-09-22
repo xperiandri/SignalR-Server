@@ -1,7 +1,6 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
@@ -163,7 +162,9 @@ namespace Microsoft.AspNetCore.SignalR.Transports
 
             if (IsConnectRequest)
             {
-                if (_protocolResolver.SupportsDelayedStart(Context.Request.GetClientProtocol()))
+                // delayed start supported only in versions 1.4 or newer
+                if (_protocolResolver.IsClientProtocolEqualOrNewer(
+                        Context.Request.GetClientProtocol(), ProtocolResolver.ProtocolVersion_1_4))
                 {
                     // TODO: Ensure delegate continues to use the C# Compiler static delegate caching optimization.
                     initialize = () => connection.Initialize(ConnectionId);

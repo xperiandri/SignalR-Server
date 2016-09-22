@@ -9,7 +9,8 @@ namespace Microsoft.AspNetCore.SignalR.Infrastructure
     {
         private readonly Version _minSupportedProtocol;
         private readonly Version _maxSupportedProtocol;
-        private readonly Version _minimumDelayedStartVersion = new Version(1, 4);
+        public static readonly Version ProtocolVersion_1_4 = new Version(1, 4);
+        public static readonly Version ProtocolVersion_1_6 = new Version(1, 6);
 
         public ProtocolResolver() :
             this(new Version(1, 2), new Version(1, 6))
@@ -41,9 +42,9 @@ namespace Microsoft.AspNetCore.SignalR.Infrastructure
             return clientProtocolVersion ?? _minSupportedProtocol;
         }
 
-        public bool SupportsDelayedStart(string clientProtocol)
+        public bool IsClientProtocolEqualOrNewer(string clientProtocol, Version version)
         {
-            return Resolve(clientProtocol) >= _minimumDelayedStartVersion;
+            return Resolve(clientProtocol) >= version;
         }
     }
 }

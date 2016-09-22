@@ -32,7 +32,7 @@ namespace Microsoft.AspNetCore.SignalR.Tests
         private class Server : IServer
         {
             IFeatureCollection IServer.Features { get; }
-            
+
             public void Start<TContext>(IHttpApplication<TContext> application)
             {
 
