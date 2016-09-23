@@ -1,21 +1,18 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-
 using System;
-using Microsoft.AspNetCore.Http;
 
 namespace Microsoft.AspNetCore.SignalR.Infrastructure
 {
     public class ProtocolResolver
     {
-        private const string ProtocolQueryParameter = "clientProtocol";
         private readonly Version _minSupportedProtocol;
         private readonly Version _maxSupportedProtocol;
         private readonly Version _minimumDelayedStartVersion = new Version(1, 4);
 
         public ProtocolResolver() :
-            this(new Version(1, 2), new Version(1, 5))
+            this(new Version(1, 2), new Version(1, 6))
         {
         }
 
@@ -25,33 +22,28 @@ namespace Microsoft.AspNetCore.SignalR.Infrastructure
             _maxSupportedProtocol = max;
         }
 
-        public Version Resolve(HttpRequest request)
+        public Version Resolve(string clientProtocol)
         {
-            if (request == null)
-            {
-                throw new ArgumentNullException("request");
-            }
+            Version clientProtocolVersion;
 
-            Version clientProtocol;
-
-            if (Version.TryParse(request.Query[ProtocolQueryParameter], out clientProtocol))
+            if (Version.TryParse(clientProtocol, out clientProtocolVersion))
             {
-                if (clientProtocol > _maxSupportedProtocol)
+                if (clientProtocolVersion > _maxSupportedProtocol)
                 {
-                    clientProtocol = _maxSupportedProtocol;
+                    clientProtocolVersion = _maxSupportedProtocol;
                 }
-                else if (clientProtocol < _minSupportedProtocol)
+                else if (clientProtocolVersion < _minSupportedProtocol)
                 {
-                    clientProtocol = _minSupportedProtocol;
+                    clientProtocolVersion = _minSupportedProtocol;
                 }
             }
 
-            return clientProtocol ?? _minSupportedProtocol;
+            return clientProtocolVersion ?? _minSupportedProtocol;
         }
 
-        public bool SupportsDelayedStart(HttpRequest request)
+        public bool SupportsDelayedStart(string clientProtocol)
         {
-            return Resolve(request) >= _minimumDelayedStartVersion;
+            return Resolve(clientProtocol) >= _minimumDelayedStartVersion;
         }
     }
 }

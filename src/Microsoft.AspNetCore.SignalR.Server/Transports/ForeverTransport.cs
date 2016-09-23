@@ -163,7 +163,7 @@ namespace Microsoft.AspNetCore.SignalR.Transports
 
             if (IsConnectRequest)
             {
-                if (_protocolResolver.SupportsDelayedStart(Context.Request))
+                if (_protocolResolver.SupportsDelayedStart(Context.Request.GetClientProtocol()))
                 {
                     // TODO: Ensure delegate continues to use the C# Compiler static delegate caching optimization.
                     initialize = () => connection.Initialize(ConnectionId);

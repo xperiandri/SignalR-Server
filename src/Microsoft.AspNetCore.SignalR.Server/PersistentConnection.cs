@@ -493,7 +493,7 @@ namespace Microsoft.AspNetCore.SignalR
                 ConnectionTimeout = _options.Transports.LongPolling.PollTimeout.TotalSeconds,
                 // TODO: Supports websockets
                 TryWebSockets = _transportManager.SupportsTransport(WebSocketsTransportName) && context.Features.Get<IHttpWebSocketFeature>() != null,
-                ProtocolVersion = _protocolResolver.Resolve(context.Request).ToString(),
+                ProtocolVersion = _protocolResolver.Resolve(context.Request.GetClientProtocol()).ToString(),
                 TransportConnectTimeout = _options.Transports.TransportConnectTimeout.TotalSeconds,
                 LongPollDelay = _options.Transports.LongPolling.PollDelay.TotalSeconds
             };
