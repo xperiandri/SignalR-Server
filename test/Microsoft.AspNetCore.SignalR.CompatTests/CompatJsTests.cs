@@ -15,7 +15,7 @@ namespace Microsoft.AspNetCore.SignalR.CompatTests
             _serverFixture = serverFixture;
         }
 
-        [Fact]
+        [Fact(Skip="Tests are too flakey")]
         public void Run_javascript_compat_tests()
         {
             var exitCode =
