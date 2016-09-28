@@ -3,21 +3,16 @@
   "buildOptions": {
     "keyFile": "../../tools/Key.snk"
   },
-
   "dependencies": {
     "Microsoft.AspNetCore.Server.IntegrationTesting": "0.2.0-*",
-    "Microsoft.Extensions.PlatformAbstractions": "1.1.0-*",
     "Microsoft.Extensions.Logging": "1.1.0-*",
-    "Microsoft.Extensions.Logging.Console": "1.1.0-*"
+    "Microsoft.Extensions.Logging.Console": "1.1.0-*",
+    "Microsoft.Extensions.PlatformAbstractions": "1.1.0-*",
+    "NETStandard.Library": "1.6.1-*"
   },
-
   "shared": "*.cs",
   "frameworks": {
-    "netstandard1.3": {
-      "dependencies": {
-        "System.Reflection.Extensions": "4.0.1-*"
-      }
-    },
+    "netstandard1.3": {},
     "net451": {}
   }
 }
