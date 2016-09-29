@@ -79,7 +79,7 @@
                 return client.start().then(() => {
                     expect(client.connection.state).toEqual($.signalR.connectionState.connected);
                 }).fail(fail).always(() => {
-                    client.connection.stop();
+                    client.connection.stop(false);
                     done();
                 });
             });
@@ -93,8 +93,8 @@
                     expect(client2.connection.state).toEqual($.signalR.connectionState.connected);
                     expect(client1.connection.id).not.toEqual(client2.connection.id);
                 }).fail(fail).always(() => {
-                    client1.connection.stop();
-                    client2.connection.stop();
+                    client1.connection.stop(false);
+                    client2.connection.stop(false);
                     done();
                 });
             });
@@ -104,7 +104,7 @@
 
                 var client1 = createConnection(transport);
                 var client2 = createConnection(transport);
-                var client3 = createConnection(transport);
+                var client3 = createConnection($.signalR.transports['webSockets']);
                 return $.when(client1.start(), client2.start(), client3.start()).then(() => {
                     client1.send(MessageType.Broadcast, '', 'Hello, World!');
                     return $.when(client1.message, client2.message, client3.message)
@@ -113,9 +113,9 @@
                     assertMessage(client1.connection.id, 'Hello, World!', m2);
                     assertMessage(client1.connection.id, 'Hello, World!', m3);
                 }).always(() => {
-                    client1.connection.stop();
-                    client2.connection.stop();
-                    client3.connection.stop();
+                    client1.connection.stop(false);
+                    client2.connection.stop(false);
+                    client3.connection.stop(false);
                     done();
                 });
             });
@@ -141,9 +141,9 @@
                     expect(client1.message.state()).toEqual('pending');
                     expect(client3.message.state()).toEqual('pending');
                 }).always(() => {
-                    client1.connection.stop();
-                    client2.connection.stop();
-                    client3.connection.stop();
+                    client1.connection.stop(false);
+                    client2.connection.stop(false);
+                    client3.connection.stop(false);
                     done();
                 });
             });
@@ -163,9 +163,9 @@
                     assertMessage(client1.connection.id, 'Hello, Group!', m2);
                     assertMessage(client1.connection.id, 'Hello, Group!', m3);
                 }).always(() => {
-                    client1.connection.stop();
-                    client2.connection.stop();
-                    client3.connection.stop();
+                    client1.connection.stop(false);
+                    client2.connection.stop(false);
+                    client3.connection.stop(false);
                     done();
                 });
             });
@@ -187,8 +187,8 @@
                 }).then((_, m1) => {
                     assertMessage(client2.connection.id, 'Hello!', m1);
                 }).always(() => {
-                    client1.connection.stop();
-                    client2.connection.stop();
+                    client1.connection.stop(false);
+                    client2.connection.stop(false);
                     done();
                 });
             });

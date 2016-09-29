@@ -42,7 +42,7 @@
                 return client.start().then(() => {
                     expect(client.connection.state).toEqual($.signalR.connectionState.connected);
                 }).fail(fail).always(() => {
-                    client.connection.stop();
+                    client.connection.stop(false);
                     done();
                 });
             });
@@ -57,8 +57,8 @@
                     expect(client2.connection.state).toEqual($.signalR.connectionState.connected);
                     expect(client1.connection.id).not.toEqual(client2.connection.id);
                 }).fail(fail).always(() => {
-                    client1.connection.stop();
-                    client2.connection.stop();
+                    client1.connection.stop(false);
+                    client2.connection.stop(false);
                     done();
                 });
             });
@@ -74,7 +74,7 @@
                 }).then(result => {
                     expect(result).toEqual(42);
                 }).fail(fail).always(() => {
-                    client.connection.stop();
+                    client.connection.stop(false);
                     done();
                 });
             });
@@ -84,7 +84,7 @@
 
                 var client1 = createChatHubConnection(transport);
                 var client2 = createChatHubConnection(transport);
-                var client3 = createChatHubConnection(transport);
+                var client3 = createChatHubConnection($.signalR.transports['webSockets']);
                 return  $.when(client1.start(), client2.start(), client3.start())
                 .then(() => {
                     client1.proxy.invoke('broadcast', 'client1', 'Hello, World!');
@@ -94,16 +94,16 @@
                     expect(m2).toEqual({ from: "client1", message: "Hello, World!" });
                     expect(m3).toEqual({ from: "client1", message: "Hello, World!" });
                 }).fail(fail).always(() => {
-                    client1.connection.stop();
-                    client2.connection.stop();
-                    client3.connection.stop();
+                    client1.connection.stop(false);
+                    client2.connection.stop(false);
+                    client3.connection.stop(false);
                     done();
                 });
             });
 
-/*
-            // TODO: Almost never passes with longPolling - possibly related to hangs when adding to group
 
+            /*
+            // TODO: Almost never passes with longPolling - possibly related to hangs when adding to group
             it('can broadcast to groups', done => {
                 var client1 = createChatHubConnection(transport);
                 var client2 = createChatHubConnection(transport);
@@ -121,14 +121,14 @@
                     expect(client1.message.state()).toEqual("pending");
                     expect(client3.message.state()).toEqual("pending");
                 }).fail(fail).always(() => {
-                    client1.connection.stop();
-                    client2.connection.stop();
-                    client3.connection.stop();
+                    client1.connection.stop(false);
+                    client2.connection.stop(false);
+                    client3.connection.stop(false);
                     done();
                 });
             });
-
-/*
+            */
+            /*
             // TODO: investigate - AddToGroup in OnConnected hangs randomly when using longPolling transport
             it('can broadcast to group joined on connection', done => {
                 console.log('hubConnection over the ' + transport.name + ' transport can broadcast to group joined on connection');
@@ -145,13 +145,12 @@
                     expect(m2).toEqual({ from: "client1", message: "Hello, World!" });
                     expect(m3).toEqual({ from: "client1", message: "Hello, World!" });
                 }).fail(fail).always(() => {
-                    client1.connection.stop();
-                    client2.connection.stop();
-                    client3.connection.stop();
+                    client1.connection.stop(false);
+                    client2.connection.stop(false);
+                    client3.connection.stop(false);
                     done();
                 });
-            });
-*/
+            });*/
 
             it('can receive progress messages', done => {
                 console.log('hubConnection over the ' + transport.name + ' transport can receive progress messages');
@@ -164,7 +163,7 @@
                 }).then(() => {
                     expect(receivedProgress).toEqual([0, 1, 2, 3, 4]);
                 }).always(() => {
-                    client1.connection.stop();
+                    client1.connection.stop(false);
                     done();
                 });
             });
@@ -185,8 +184,8 @@
                 }).then((_, m1) => {
                     expect(m1).toEqual({ from: 'client2', message: 'Hello!' });
                 }).always(() => {
-                    client1.connection.stop();
-                    client2.connection.stop();
+                    client1.connection.stop(false);
+                    client2.connection.stop(false);
                     done();
                 });
             });
