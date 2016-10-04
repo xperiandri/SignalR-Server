@@ -4,6 +4,7 @@
     "Microsoft.AspNetCore.SignalR.Server": "0.2.0-*",
     "Microsoft.AspNetCore.SignalR.Testing.Common": "1.1.0-*",
     "Microsoft.AspNetCore.Testing": "1.1.0-*",
+    "Microsoft.DotNet.InternalAbstractions": "1.0.0",
     "Moq": "4.6.36-*",
     "SignalRSample.Web": "1.0.0",
     "xunit": "2.2.0-*"

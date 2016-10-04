@@ -9,6 +9,7 @@
     "dotnet-test-xunit": "2.2.0-*",
     "Microsoft.AspNetCore.Server.IntegrationTesting": "0.2.0-*",
     "Microsoft.AspNetCore.SignalR.Testing.Common": "1.1.0-*",
+    "Microsoft.DotNet.InternalAbstractions": "1.0.0",
     "Microsoft.Extensions.Logging": "1.1.0-*",
     "Microsoft.Extensions.Logging.Console": "1.1.0-*",
     "Microsoft.Extensions.PlatformAbstractions": "1.1.0-*",

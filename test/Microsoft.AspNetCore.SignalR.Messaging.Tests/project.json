@@ -3,6 +3,7 @@
     "dotnet-test-xunit": "2.2.0-*",
     "Microsoft.AspNetCore.SignalR.Messaging": "0.2.0-*",
     "Microsoft.AspNetCore.SignalR.Testing.Common": "1.1.0-*",
+    "Microsoft.DotNet.InternalAbstractions": "1.0.0",
     "Microsoft.Extensions.DependencyInjection": "1.1.0-*",
     "Moq": "4.6.36-*",
     "xunit": "2.2.0-*"
