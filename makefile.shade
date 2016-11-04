@@ -14,3 +14,5 @@ var phantomjsGloballyInstalled =  '${!phantomjsInstalled && TestCommand("phantom
 #initialize
     var phantomjsInstallCommand = 'install ${E("KOREBUILD_NPM_INSTALL_OPTIONS")} --prefix "${nodeDirectory}" phantomjs-prebuilt'
     npm npmCommand='${phantomjsInstallCommand}' if='!(phantomjsInstalled || phantomjsGloballyInstalled)'
+
+#xunit-test
