@@ -2,8 +2,8 @@
   "dependencies": {
     "SignalRSample.Web": "1.0.0",
     "Microsoft.AspNetCore.SignalR.Testing.Common": "1.0.0-*",
-    "Microsoft.AspNetCore.SignalR.Server": "0.1.0-rtm-21431",
-    "Microsoft.AspNetCore.Testing": "1.0.0-rtm-21431",
+    "Microsoft.AspNetCore.SignalR.Server": "0.1.1",
+    "Microsoft.AspNetCore.Testing": "1.0.1",
     "xunit": "2.1.0"
   },
   "buildOptions": {

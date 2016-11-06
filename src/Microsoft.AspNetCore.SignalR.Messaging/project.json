@@ -1,15 +1,15 @@
 {
-  "version": "0.1.0-rtm-21431",
+  "version": "0.1.1",
   "description": "Core messaging components for ASP.NET SignalR.",
   "dependencies": {
-    "Microsoft.Extensions.Logging": "1.0.0",
-    "Microsoft.Extensions.Options": "1.0.0",
+    "Microsoft.Extensions.Logging": "1.0.1",
+    "Microsoft.Extensions.Options": "1.0.1",
     "Microsoft.Extensions.PlatformAbstractions": {
       "version": "1.0.0",
       "type": "build"
     },
     "Microsoft.AspNetCore.SignalR.Sources": {
-      "version": "0.1.0-rtm-21431",
+      "version": "0.1.1",
       "type": "build"
     }
   },
