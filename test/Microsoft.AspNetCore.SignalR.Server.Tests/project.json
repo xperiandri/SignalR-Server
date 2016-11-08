@@ -20,7 +20,7 @@
       "dependencies": {
         "dotnet-test-xunit": "1.0.0-rc3-000000-01",
         "Microsoft.NETCore.App": {
-          "version": "1.0.0",
+          "version": "1.0.3-*",
           "type": "platform"
         },
         "moq.netcore": "4.4.0-beta8",
