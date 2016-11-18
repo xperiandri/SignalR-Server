@@ -7,13 +7,13 @@
   "testRunner": "xunit",
   "dependencies": {
     "dotnet-test-xunit": "2.2.0-*",
-    "Microsoft.AspNetCore.Server.IntegrationTesting": "0.2.0-*",
+    "Microsoft.AspNetCore.Server.IntegrationTesting": "0.2.0-rtm-22752",
     "Microsoft.AspNetCore.SignalR.Testing.Common": "1.1.0-*",
     "Microsoft.DotNet.InternalAbstractions": "1.0.0",
-    "Microsoft.Extensions.Logging": "1.1.0-*",
-    "Microsoft.Extensions.Logging.Console": "1.1.0-*",
-    "Microsoft.Extensions.PlatformAbstractions": "1.1.0-*",
-    "Microsoft.Extensions.RuntimeEnvironment.Sources": "1.1.0-*",
+    "Microsoft.Extensions.Logging": "1.1.0",
+    "Microsoft.Extensions.Logging.Console": "1.1.0",
+    "Microsoft.Extensions.PlatformAbstractions": "1.1.0",
+    "Microsoft.Extensions.RuntimeEnvironment.Sources": "1.1.0-rtm-22752",
     "xunit": "2.2.0-*"
   },
   "frameworks": {
@@ -25,7 +25,7 @@
     "netcoreapp1.1": {
       "dependencies": {
         "Microsoft.NETCore.App": {
-          "version": "1.1.0-*",
+          "version": "1.1.0",
           "type": "platform"
         }
       }
