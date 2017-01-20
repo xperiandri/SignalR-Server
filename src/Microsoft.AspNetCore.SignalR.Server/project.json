@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0-rtm-22752",
+  "version": "0.2.0-rtm-22753",
   "description": "Core server components for ASP.NET SignalR.",
   "dependencies": {
     "Microsoft.AspNetCore.DataProtection": "1.1.0",

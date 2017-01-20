@@ -16,7 +16,7 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
             _serviceProvider = serviceProvider;
         }
 
-        public IHub Create(HubDescriptor descriptor)
+        public IHub Create(HubDescriptor descriptor, IServiceProvider serviceProvider)
         {
             if (descriptor == null)
             {
@@ -28,7 +28,7 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
                 return null;
             }
 
-            return ActivatorUtilities.CreateInstance(_serviceProvider, descriptor.HubType) as IHub;
+            return ActivatorUtilities.CreateInstance(serviceProvider ?? _serviceProvider, descriptor.HubType) as IHub;
         }
     }
 }

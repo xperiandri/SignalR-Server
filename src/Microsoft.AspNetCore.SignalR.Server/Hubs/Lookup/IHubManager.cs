@@ -28,19 +28,6 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
         IEnumerable<HubDescriptor> GetHubs(Func<HubDescriptor, bool> predicate);
 
         /// <summary>
-        /// Resolves a given hub name to a concrete object.
-        /// </summary>
-        /// <param name="hubName">Name of the hub.</param>
-        /// <returns>Hub implementation instance, if found. Null otherwise.</returns>
-        IHub ResolveHub(string hubName);
-
-        /// <summary>
-        /// Resolves all available hubs to their concrete objects.
-        /// </summary>
-        /// <returns>List of hub instances.</returns>
-        IEnumerable<IHub> ResolveHubs();
-
-        /// <summary>
         /// Retrieves a method with a given name on a given hub.
         /// </summary>
         /// <param name="hubName">Name of the hub.</param>

@@ -32,7 +32,7 @@ namespace Microsoft.AspNetCore.SignalR.Tests.Hubs
         {
             // Arrange
             var serviceProvider = CreateServiceProvider();
-            var dispatcher = new HubDispatcher(serviceProvider.GetRequiredService<IOptions<SignalROptions>>());
+            var dispatcher = new HubDispatcher(serviceProvider.GetRequiredService<IOptions<SignalROptions>>(), serviceProvider.GetRequiredService<IServiceScopeFactory>(), serviceProvider.GetRequiredService<IHubActivator>());
             var testContext = new TestContext(proxyUrl);
 
             // Act
@@ -52,7 +52,7 @@ namespace Microsoft.AspNetCore.SignalR.Tests.Hubs
         {
             // Arrange
             var serviceProvider = CreateServiceProvider();
-            var dispatcher = new HubDispatcher(serviceProvider.GetRequiredService<IOptions<SignalROptions>>());
+            var dispatcher = new HubDispatcher(serviceProvider.GetRequiredService<IOptions<SignalROptions>>(), serviceProvider.GetRequiredService<IServiceScopeFactory>(), serviceProvider.GetRequiredService<IHubActivator>());
             var testContext = new TestContext(proxyUrl + "/");
 
             // Act
@@ -74,7 +74,7 @@ namespace Microsoft.AspNetCore.SignalR.Tests.Hubs
             var serviceProvider = CreateServiceProvider();
             var optionsAccessor = serviceProvider.GetRequiredService<IOptions<SignalROptions>>();
             optionsAccessor.Value.Hubs.EnableJavaScriptProxies = false;
-            var dispatcher = new HubDispatcher(optionsAccessor);
+            var dispatcher = new HubDispatcher(optionsAccessor, serviceProvider.GetRequiredService<IServiceScopeFactory>(), serviceProvider.GetRequiredService<IHubActivator>());
             var testContext = new TestContext(proxyUrl);
 
             // Act
@@ -92,7 +92,7 @@ namespace Microsoft.AspNetCore.SignalR.Tests.Hubs
         {
             // Arrange
             var serviceProvider = CreateServiceProvider();
-            var dispatcher = new HubDispatcher(serviceProvider.GetRequiredService<IOptions<SignalROptions>>());
+            var dispatcher = new HubDispatcher(serviceProvider.GetRequiredService<IOptions<SignalROptions>>(), serviceProvider.GetRequiredService<IServiceScopeFactory>(), serviceProvider.GetRequiredService<IHubActivator>());
             var testContext = new TestContext("/signalr/send", new Dictionary<string, string>
             {
                 {"transport", "longPolling"},
@@ -123,7 +123,7 @@ namespace Microsoft.AspNetCore.SignalR.Tests.Hubs
         {
             // Arrange
             var serviceProvider = CreateServiceProvider();
-            var dispatcher = new HubDispatcher(serviceProvider.GetRequiredService<IOptions<SignalROptions>>());
+            var dispatcher = new HubDispatcher(serviceProvider.GetRequiredService<IOptions<SignalROptions>>(), serviceProvider.GetRequiredService<IServiceScopeFactory>(), serviceProvider.GetRequiredService<IHubActivator>());
             var testContext = new TestContext("/signalr/send", new Dictionary<string, string>
             {
                 { "transport", "longPolling"},
@@ -155,7 +155,7 @@ namespace Microsoft.AspNetCore.SignalR.Tests.Hubs
             var serviceProvider = CreateServiceProvider();
             var optionsAccessor = serviceProvider.GetRequiredService<IOptions<SignalROptions>>();
             optionsAccessor.Value.Hubs.EnableDetailedErrors = true;
-            var dispatcher = new HubDispatcher(optionsAccessor);
+            var dispatcher = new HubDispatcher(optionsAccessor, serviceProvider.GetRequiredService<IServiceScopeFactory>(), serviceProvider.GetRequiredService<IHubActivator>());
             var testContext = new TestContext("/signalr/send", new Dictionary<string, string>
             {
                 { "transport", "longPolling"},
@@ -186,7 +186,7 @@ namespace Microsoft.AspNetCore.SignalR.Tests.Hubs
             var serviceProvider = CreateServiceProvider();
             var optionsAccessor = serviceProvider.GetRequiredService<IOptions<SignalROptions>>();
             optionsAccessor.Value.Hubs.EnableDetailedErrors = true;
-            var dispatcher = new HubDispatcher(optionsAccessor);
+            var dispatcher = new HubDispatcher(optionsAccessor, serviceProvider.GetRequiredService<IServiceScopeFactory>(), serviceProvider.GetRequiredService<IHubActivator>());
             var testContext = new TestContext("/signalr/send", new Dictionary<string, string>
             {
                 {"transport", "longPolling"},
@@ -220,7 +220,7 @@ namespace Microsoft.AspNetCore.SignalR.Tests.Hubs
 
             var serviceProvider = ServiceProviderHelper.CreateServiceProvider(services => services.AddSingleton(mockHubManager.Object));
 
-            var dispatcher = new HubDispatcher(serviceProvider.GetRequiredService<IOptions<SignalROptions>>());
+            var dispatcher = new HubDispatcher(serviceProvider.GetRequiredService<IOptions<SignalROptions>>(), serviceProvider.GetRequiredService<IServiceScopeFactory>(), serviceProvider.GetRequiredService<IHubActivator>());
             var testContext = new TestContext("/ignorePath", new Dictionary<string, string>
             {
                 {"connectionData", @"[{name: ""foo""}, {name: ""Foo""}]"},

@@ -86,16 +86,5 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
             return methods;
 
         }
-
-        public IHub ResolveHub(string hubName)
-        {
-            HubDescriptor hub = GetHub(hubName);
-            return hub == null ? null : _activator.Create(hub);
-        }
-
-        public IEnumerable<IHub> ResolveHubs()
-        {
-            return GetHubs(predicate: null).Select(hub => _activator.Create(hub));
-        }
     }
 }

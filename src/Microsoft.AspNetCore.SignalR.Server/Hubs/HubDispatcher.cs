@@ -32,6 +32,8 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
         private readonly List<HubDescriptor> _hubs = new List<HubDescriptor>();
         private readonly bool _enableJavaScriptProxies;
         private readonly bool _enableDetailedErrors;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly IHubActivator _activator;
 
         private IJavaScriptProxyGenerator _proxyGenerator;
         private IHubManager _manager;
@@ -48,33 +50,23 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
         /// Initializes an instance of the <see cref="HubDispatcher"/> class.
         /// </summary>
         /// <param name="options">Configuration settings determining whether to enable JS proxies and provide clients with detailed hub errors.</param>
-        public HubDispatcher(IOptions<SignalROptions> optionsAccessor)
+        public HubDispatcher(IOptions<SignalROptions> optionsAccessor, IServiceScopeFactory serviceScopeFactory, IHubActivator activator)
         {
             if (optionsAccessor == null)
-            {
-                throw new ArgumentNullException("optionsAccessor");
-            }
+                throw new ArgumentNullException(nameof(optionsAccessor));
+            if (serviceScopeFactory == null)
+                throw new ArgumentNullException(nameof(serviceScopeFactory));
 
             var options = optionsAccessor.Value;
             _enableJavaScriptProxies = options.Hubs.EnableJavaScriptProxies;
             _enableDetailedErrors = options.Hubs.EnableDetailedErrors;
+            _serviceScopeFactory = serviceScopeFactory;
+            _activator = activator;
         }
 
-        protected override ILogger Logger
-        {
-            get
-            {
-                return LoggerFactory.CreateLogger<HubDispatcher>();
-            }
-        }
+        protected override ILogger Logger => LoggerFactory.CreateLogger<HubDispatcher>();
 
-        internal override string GroupPrefix
-        {
-            get
-            {
-                return PrefixHelper.HubGroupPrefix;
-            }
-        }
+        internal override string GroupPrefix => PrefixHelper.HubGroupPrefix;
 
         public override void Initialize(IServiceProvider serviceProvider)
         {
@@ -149,7 +141,7 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
         /// <summary>
         /// Processes the hub's incoming method calls.
         /// </summary>
-        protected override Task OnReceived(HttpRequest request, string connectionId, string data)
+        protected override async Task OnReceived(HttpRequest request, string connectionId, string data)
         {
             HubRequest hubRequest = _requestParser.Parse(data, _serializer);
 
@@ -177,10 +169,13 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
                 methodDescriptor = new NullMethodDescriptor(descriptor, hubRequest.Method, availableMethods);
             }
 
-            var hub = CreateHub(request, descriptor, connectionId, throwIfFailedToCreate: true);
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var hub = CreateHub(scope.ServiceProvider, request, descriptor, connectionId, throwIfFailedToCreate: true);
 
-            return InvokeHubPipeline(hub, parameterValues, methodDescriptor, hubRequest)
-                .ContinueWithPreservedCulture(task => hub.Dispose(), TaskContinuationOptions.ExecuteSynchronously);
+                await InvokeHubPipeline(hub, parameterValues, methodDescriptor, hubRequest)
+                    .ContinueWithPreservedCulture(task => hub.Dispose(), TaskContinuationOptions.ExecuteSynchronously);
+            }
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Exceptions are flown to the caller.")]
@@ -415,21 +410,27 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
             return signals.ToList();
         }
 
+        private Task CreateHubAndExecuteAction(Func<IServiceProvider, IHub> factory, Func<IHub, Task> action) =>
+            Task.Run(async () =>
+        {
+            using (var scope = _serviceScopeFactory.CreateScope())
+            using (var hub = factory(scope.ServiceProvider))
+            {
+                await action(hub).OrEmpty().Catch(Logger);
+            }
+        });
+
         private Task ExecuteHubEvent(HttpRequest request, string connectionId, Func<IHub, Task> action)
         {
-            var hubs = GetHubs(request, connectionId).ToList();
-            var operations = hubs.Select(instance => action(instance).OrEmpty().Catch(Logger)).ToArray();
+            var operations = (from descriptor in _hubs
+                              select CreateHubAndExecuteAction(serviceProvider => CreateHub(serviceProvider, request, descriptor, connectionId), action)).ToArray();
 
-            if (operations.Length == 0)
-            {
-                DisposeHubs(hubs);
+            if (!operations.Any())
                 return TaskAsyncHelper.Empty;
-            }
 
             var tcs = new TaskCompletionSource<object>();
             Task.Factory.ContinueWhenAll(operations, tasks =>
             {
-                DisposeHubs(hubs);
                 var faulted = tasks.FirstOrDefault(t => t.IsFaulted);
                 if (faulted != null)
                 {
@@ -448,20 +449,22 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
             return tcs.Task;
         }
 
-        private IHub CreateHub(HttpRequest request, HubDescriptor descriptor, string connectionId, bool throwIfFailedToCreate = false)
+        private IHub CreateHub(IServiceProvider serviceProvider, HttpRequest request, HubDescriptor descriptor, string connectionId, bool throwIfFailedToCreate = false)
         {
             try
             {
-                var hub = _manager.ResolveHub(descriptor.Name);
+                var hubDescriptor = _manager.GetHub(descriptor.Name);
 
-                if (hub != null)
+                if (hubDescriptor != null)
                 {
+                    var hub = _activator.Create(descriptor, serviceProvider);
                     hub.Context = new HubCallerContext(request, connectionId);
                     hub.Clients = new HubConnectionContext(_pipelineInvoker, Connection, descriptor.Name, connectionId);
                     hub.Groups = new GroupManager(Connection, PrefixHelper.GetHubGroupName(descriptor.Name));
+                    return hub;
                 }
-
-                return hub;
+                else
+                    return null;
             }
             catch (Exception ex)
             {
@@ -473,22 +476,6 @@ namespace Microsoft.AspNetCore.SignalR.Hubs
                 }
 
                 return null;
-            }
-        }
-
-        private IEnumerable<IHub> GetHubs(HttpRequest request, string connectionId)
-        {
-            return from descriptor in _hubs
-                   select CreateHub(request, descriptor, connectionId) into hub
-                   where hub != null
-                   select hub;
-        }
-
-        private static void DisposeHubs(IEnumerable<IHub> hubs)
-        {
-            foreach (var hub in hubs)
-            {
-                hub.Dispose();
             }
         }
 
